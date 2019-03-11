@@ -33,13 +33,14 @@ void Renderer::CreateVertexBufferObjects()
 	float rect[]
 		=
 	{
+			// xyz,xyz,xyz 3개
 		-0.5, -0.5, 0.f, -0.5, 0.5, 0.f, 0.5, 0.5, 0.f, //Triangle1
 		-0.5, -0.5, 0.f,  0.5, 0.5, 0.f, 0.5, -0.5, 0.f, //Triangle2
 	};
 
 	glGenBuffers(1, &m_VBORect);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -273,10 +274,10 @@ void Renderer::Test()
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);// 총 18개의 float 포인터가 들어가 있음 6개 (x,y,z)
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);	// array에서 m_VBORect에 들어가 내용물을 3개씩 끊어서
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 6);	// 그려라! 함수, GL_TRIANGLES : 프리미티브 (삼각형 형태로 안을 칠해라), 6개의 vertex를 그려라
 
 	glDisableVertexAttribArray(attribPosition);
 }
