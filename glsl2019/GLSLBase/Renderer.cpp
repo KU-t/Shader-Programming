@@ -30,17 +30,80 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 void Renderer::CreateVertexBufferObjects()
 {
-	float rect[]
-		=
-	{
-			// xyz,xyz,xyz 3개
-		-0.5, -0.5, 0.f, -0.5, 0.5, 0.f, 0.5, 0.5, 0.f, //Triangle1
-		-0.5, -0.5, 0.f,  0.5, 0.5, 0.f, 0.5, -0.5, 0.f, //Triangle2
+	float rect[] = {
+		// xyz,xyz,xyz 3개
+	-0.5, -0.5, 0.f, -0.5, 0.5, 0.f, 0.5, 0.5, 0.f, //Triangle1
+	-0.5, -0.5, 0.f,  0.5, 0.5, 0.f, 0.5, -0.5, 0.f, //Triangle2
 	};
 
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
+
+	//Lecture2
+	float triangleVertex[] = { -1,0,0,0,1,0,1,0,0 };	//9float
+
+	glGenBuffers(1, &m_VBOLecture);	// 개수는 하나 방금 만든 m_VBOLecture를 집어넣고 만든다.
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	//	이놈을 올리는데 대상은 GL_ARRAY_BUFFER, 올린건  m_VBOLecture
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertex), triangleVertex, GL_STATIC_DRAW);	// 버퍼 데이타를 통해 gpu 메모리에 올리는 작업, triangleVertex 사이즈만큼 올릴거고 
+
+	GenQuadsVBO(100);
+}
+
+void Renderer::GenQuadsVBO(int count)
+{
+	float randX, randY;
+	float size = 0.01f;
+	float arraySize = count * 3 * 6;	// 3대신 4
+	float *vertices = new float[arraySize];
+
+	for (int i = 0; i < count; i++) {
+		int index = i * 18;	// 24
+
+		randX = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+		randY = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+		
+		{
+		vertices[index] = randX - size;	index++;
+		vertices[index] = randY - size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+
+		vertices[index] = randX - size;	index++;
+		vertices[index] = randY + size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+
+		vertices[index] = randX + size;	index++;
+		vertices[index] = randY + size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+
+		}
+
+		{
+		vertices[index] = randX - size;	index++;
+		vertices[index] = randY - size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+
+		vertices[index] = randX + size;	index++;
+		vertices[index] = randY - size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+
+		vertices[index] = randX + size;	index++;
+		vertices[index] = randY + size;	index++;
+		vertices[index] = 0.f;	index++;
+		//vertices[index] = (float)i;	index++;
+		}
+	}
+
+	glGenBuffers(1, &m_VBOQuads);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+
+	m_VBOQuads_VertexCount = 6 * count;
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -268,7 +331,7 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	return temp;
 }
 
-void Renderer::Test()
+void Renderer::Test()	// 사각형 그리기
 {
 	glUseProgram(m_SolidRectShader);
 
@@ -280,4 +343,32 @@ void Renderer::Test()
 	glDrawArrays(GL_TRIANGLES, 0, 6);	// 그려라! 함수, GL_TRIANGLES : 프리미티브 (삼각형 형태로 안을 칠해라), 6개의 vertex를 그려라
 
 	glDisableVertexAttribArray(attribPosition);
+}
+
+void Renderer::Lecture2()
+{
+	glUseProgram(m_SolidRectShader);
+
+	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	
+	{
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);	// ************랜덤 사각형 그리기
+	
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0	3==4
+
+	glDrawArrays(GL_TRIANGLES, 0, m_VBOQuads_VertexCount);	// 3 == m_VBOQuads_VertexCount
+
+	glDisableVertexAttribArray(attribPosition);
+	}
+	
+	{
+	//glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	// ***************삼각형 그리기
+
+	//glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0
+
+	//glDrawArrays(GL_TRIANGLES, 0, 3);	//
+
+	//glDisableVertexAttribArray(attribPosition);
+	}
 }

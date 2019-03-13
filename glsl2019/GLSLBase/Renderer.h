@@ -21,6 +21,7 @@ public:
 	GLuint CreateBmpTexture(char * filePath);
 	   
 	void Test();
+	void Lecture2();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -28,6 +29,7 @@ private:
 	void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType);
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects(); 
+	void GenQuadsVBO(int count);
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
 	bool m_Initialized = false;
@@ -37,5 +39,9 @@ private:
 
 	GLuint m_VBORect = 0;
 	GLuint m_SolidRectShader = 0;
+
+	GLuint m_VBOLecture = 0;
+	GLuint m_VBOQuads = 0;
+	GLuint m_VBOQuads_VertexCount = 0;
 };
 
