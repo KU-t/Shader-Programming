@@ -20,8 +20,9 @@ public:
 	GLuint CreatePngTexture(char * filePath);
 	GLuint CreateBmpTexture(char * filePath);
 	   
-	void Test();
-	void Lecture2();
+	void DrawRect();
+	void DrawTriangle();
+	void DrawRandRect();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);

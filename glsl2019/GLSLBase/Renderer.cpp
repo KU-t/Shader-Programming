@@ -30,24 +30,25 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 void Renderer::CreateVertexBufferObjects()
 {
+	// DrawRect()  init
 	float rect[] = {
 		// xyz,xyz,xyz 3개
 	-0.5, -0.5, 0.f, -0.5, 0.5, 0.f, 0.5, 0.5, 0.f, //Triangle1
 	-0.5, -0.5, 0.f,  0.5, 0.5, 0.f, 0.5, -0.5, 0.f, //Triangle2
 	};
 
-	glGenBuffers(1, &m_VBORect);
+	glGenBuffers(1, &m_VBORect);	// m_VBORect에 rect[] 만들겠다.
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
 
-	//Lecture2
+	//DrawTri()함수 init
 	float triangleVertex[] = { -1,0,0,0,1,0,1,0,0 };	//9float
 
 	glGenBuffers(1, &m_VBOLecture);	// 개수는 하나 방금 만든 m_VBOLecture를 집어넣고 만든다.
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	//	이놈을 올리는데 대상은 GL_ARRAY_BUFFER, 올린건  m_VBOLecture
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertex), triangleVertex, GL_STATIC_DRAW);	// 버퍼 데이타를 통해 gpu 메모리에 올리는 작업, triangleVertex 사이즈만큼 올릴거고 
 
-	GenQuadsVBO(100);
+	//GenQuadsVBO(100);
 }
 
 void Renderer::GenQuadsVBO(int count)
@@ -331,7 +332,7 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	return temp;
 }
 
-void Renderer::Test()	// 사각형 그리기
+void Renderer::DrawRect()	// 사각형 그리기
 {
 	glUseProgram(m_SolidRectShader);
 
@@ -345,30 +346,38 @@ void Renderer::Test()	// 사각형 그리기
 	glDisableVertexAttribArray(attribPosition);
 }
 
-void Renderer::Lecture2()
+void Renderer::DrawTriangle()
 {
 	glUseProgram(m_SolidRectShader);
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
 	
-	{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);	// ************랜덤 사각형 그리기
 	
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0	3==4
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	// ***************삼각형 그리기
 
-	glDrawArrays(GL_TRIANGLES, 0, m_VBOQuads_VertexCount);	// 3 == m_VBOQuads_VertexCount
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);	//
 
 	glDisableVertexAttribArray(attribPosition);
-	}
 	
+}
+
+void Renderer::DrawRandRect()
+{
+	glUseProgram(m_SolidRectShader);
+
+	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+
 	{
-	//glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	// ***************삼각형 그리기
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);	// ************랜덤 사각형 그리기
 
-	//glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0
+		glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0	3==4
 
-	//glDrawArrays(GL_TRIANGLES, 0, 3);	//
+		glDrawArrays(GL_TRIANGLES, 0, m_VBOQuads_VertexCount);	// 3 == m_VBOQuads_VertexCount
 
-	//glDisableVertexAttribArray(attribPosition);
+		glDisableVertexAttribArray(attribPosition);
 	}
 }
