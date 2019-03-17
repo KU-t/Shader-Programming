@@ -29,7 +29,10 @@ void RenderScene(void)
 	// 2. 화면을 그린다.
 	//g_Renderer->DrawRect();
 	//g_Renderer->DrawTriangle();
-	g_Renderer->DrawRandRect();
+	//g_Renderer->DrawRandRect();
+	//g_Renderer->DrawGredMesh();
+	g_Renderer->DrawProxyGeometry();
+
 	glutSwapBuffers();
 }
 
