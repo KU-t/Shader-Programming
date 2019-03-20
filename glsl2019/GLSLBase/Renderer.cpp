@@ -30,16 +30,37 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 void Renderer::CreateVertexBufferObjects()
 {
+
+	float size = 0.02f;
 	// DrawRect()  init
 	float rect[] = {
 		// xyz,xyz,xyz 3개
-	-0.5, -0.5, 0.f, -0.5, 0.5, 0.f, 0.5, 0.5, 0.f, //Triangle1
-	-0.5, -0.5, 0.f,  0.5, 0.5, 0.f, 0.5, -0.5, 0.f, //Triangle2
+		// xyz, value
+	-size, -size, 0.f, 0.5f,
+	-size, size, 0.f, 0.5f,
+	size, size, 0.f, 0.5f, //Triangle1
+	-size, -size, 0.f, 0.5f,
+	size, size, 0.f, 0.5f,
+	size, -size, 0.f, 0.5f //Triangle2
 	};
 
 	glGenBuffers(1, &m_VBORect);	// m_VBORect에 rect[] 만들겠다.
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
+
+	float color[] = {
+	
+	-0.5, -0.5, 0.f, 0.1f,
+	-0.5, 0.5, 0.f, 0.2f,
+	0.5, 0.5, 0.f, 0.3f, //Triangle1
+	-0.5, -0.5, 0.f, 0.4f,
+	0.5, 0.5, 0.f, 0.5f,
+	0.5, -0.5, 0.f, 0.6f //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBORectcolor);	// m_VBORect에 rect[] 만들겠다.
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORectcolor);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
+	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
 
 	//DrawTri()함수 init
 	float triangleVertex[] = { -1,0,0,0,1,0,1,0,0 };	//9float
@@ -124,7 +145,7 @@ void Renderer::GridMeshVBO()
 	int PointCountX = 32;
 	int PointCountY = 32;
 
-	float arraysize = 32 * 32 * 3;
+	float arraysize = PointCountX * PointCountY * 3;
 
 	float Width = EndPointX - StartPointX;
 	float Height = EndPointY - StartPointY;
@@ -482,18 +503,41 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	return temp;
 }
 
+float radian = 1.f;
+
 void Renderer::DrawRect()	// 사각형 그리기
 {
 	glUseProgram(m_SolidRectShader);
 
-	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
-	glEnableVertexAttribArray(attribPosition);
+	GLuint uTimeID = glGetUniformLocation(m_SolidRectShader, "u_Time");
+	GLuint aPosID = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	GLuint aColID = glGetAttribLocation(m_SolidRectShader, "a_Color");	// color 사용안하면 이상한값 호출됨
+	
+	radian += 0.1f;
+	glUniform1f(uTimeID, radian);	// 매 프레임마다 1번씩 CPU-> GPU
+
+
+
+
+	//int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	glEnableVertexAttribArray(aPosID);	// == glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);// 총 18개의 float 포인터가 들어가 있음 6개 (x,y,z)
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);	// array에서 m_VBORect에 들어가 내용물을 3개씩 끊어서
+	glVertexAttribPointer(aPosID, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0); // 4개 x,y,z,value 읽고 4개씩 건너 뛰어라
+	// == glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0); // 3개 x,y,z만 읽고 4개씩 건너 뛰어라
+	// array에서 m_VBORect에 들어가 내용물을 3개씩 끊어서
+	// == glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);	
+
+	glEnableVertexAttribArray(aColID); // == glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORectcolor);
+	glVertexAttribPointer(aColID, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	// == glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);	// 그려라! 함수, GL_TRIANGLES : 프리미티브 (삼각형 형태로 안을 칠해라), 6개의 vertex를 그려라
+	// 0번째에서 시작을 해서 6개씩 읽으면서 그려라
 
-	glDisableVertexAttribArray(attribPosition);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void Renderer::DrawTriangle()
@@ -522,7 +566,7 @@ void Renderer::DrawRandRect()
 	glEnableVertexAttribArray(attribPosition);
 
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);	// ************랜덤 사각형 그리기
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);
 
 		glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0	3==4
 
@@ -532,7 +576,7 @@ void Renderer::DrawRandRect()
 	}
 }
 
-void Renderer::DrawGredMesh()
+void Renderer::DrawGridMesh()
 {
 	glUseProgram(m_SolidRectShader);
 
@@ -560,9 +604,9 @@ void Renderer::DrawProxyGeometry()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_ProxyGeo);	
 
-		glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-
-		glDrawArrays(GL_TRIANGLES, 0, m_Count_ProxyGeo);
+		glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);	//	float 포인터3개씩 float size 3개씩 넘어간다
+		
+		glDrawArrays(GL_LINE_STRIP, 0, m_Count_ProxyGeo);
 
 		glDisableVertexAttribArray(attribPosition);
 	}

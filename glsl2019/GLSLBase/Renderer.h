@@ -23,7 +23,7 @@ public:
 	void DrawRect();
 	void DrawTriangle();
 	void DrawRandRect();
-	void DrawGredMesh();
+	void DrawGridMesh();
 	void DrawProxyGeometry();
 
 private:
@@ -44,17 +44,23 @@ private:
 	unsigned int m_WindowSizeX = 0;
 	unsigned int m_WindowSizeY = 0;
 
+	// DrawRect
 	GLuint m_VBORect = 0;
+	GLuint m_VBORectcolor = 0;
 	GLuint m_SolidRectShader = 0;
 
+	//DrawTriangle
 	GLuint m_VBOLecture = 0;
 
+	//DrawRandRect
 	GLuint m_VBOQuads = 0;
 	GLuint m_VBOQuads_VertexCount = 0;
 
+	//DrawGridmesh
 	GLuint m_VBOGrid = 0;
 	GLuint m_VBOGrid_VertexCount = 0;
 
+	//DrawProxygeometry
 	GLuint m_VBO_ProxyGeo = 0;
 	GLuint m_Count_ProxyGeo = 0;
 };
