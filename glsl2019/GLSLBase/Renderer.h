@@ -25,6 +25,7 @@ public:
 	void DrawRandRect();
 	void DrawGridMesh();
 	void DrawProxyGeometry();
+	void DrawSimpleVel();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -34,6 +35,7 @@ private:
 	void CreateVertexBufferObjects(); 
 
 	void GenQuadsVBO(int count);
+	void GenQuadsVBO_Vel(int count);
 	void GridMeshVBO();
 	void CreateProxyGeometry();
 
@@ -47,7 +49,6 @@ private:
 	// DrawRect
 	GLuint m_VBORect = 0;
 	GLuint m_VBORectcolor = 0;
-	GLuint m_SolidRectShader = 0;
 
 	//DrawTriangle
 	GLuint m_VBOLecture = 0;
@@ -63,5 +64,9 @@ private:
 	//DrawProxygeometry
 	GLuint m_VBO_ProxyGeo = 0;
 	GLuint m_Count_ProxyGeo = 0;
+
+	//Shaders
+	GLuint m_SolidRectShader = 0;
+	GLuint m_SimpleVelShader = 0;
 };
 

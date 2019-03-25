@@ -13,6 +13,7 @@ Renderer::Renderer(int windowSizeX, int windowSizeY)
 
 Renderer::~Renderer()
 {
+
 }
 
 void Renderer::Initialize(int windowSizeX, int windowSizeY)
@@ -23,7 +24,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+	m_SimpleVelShader = CompileShaders("./Shaders/Simplevel.vs", "./Shaders/Simplevel.fs");
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 }
@@ -70,19 +72,22 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertex), triangleVertex, GL_STATIC_DRAW);	// 버퍼 데이타를 통해 gpu 메모리에 올리는 작업, triangleVertex 사이즈만큼 올릴거고 
 
 	//DrawRandRect() init
-	GenQuadsVBO(100);
+	GenQuadsVBO(1000);
 
 	//DrawGridMesh() init
 	//GridMeshVBO();
 
 	//DrawProxyGeometry() init
 	CreateProxyGeometry();
+
+	//DrawSimpleVel() init
+	GenQuadsVBO_Vel(1000);
 }
 
 void Renderer::GenQuadsVBO(int count)
 {
 	float randX, randY;
-	float size = 0.01f;
+	float size = 0.002f;
 	float arraySize = count * 3 * 6;	// 3대신 4
 	float *vertices = new float[arraySize];
 
@@ -95,17 +100,20 @@ void Renderer::GenQuadsVBO(int count)
 		{
 		vertices[index] = randX - size;	index++;
 		vertices[index] = randY - size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
 
 		vertices[index] = randX - size;	index++;
 		vertices[index] = randY + size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
 
 		vertices[index] = randX + size;	index++;
 		vertices[index] = randY + size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
 
 		}
@@ -113,18 +121,112 @@ void Renderer::GenQuadsVBO(int count)
 		{
 		vertices[index] = randX - size;	index++;
 		vertices[index] = randY - size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
 
 		vertices[index] = randX + size;	index++;
 		vertices[index] = randY - size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
 
 		vertices[index] = randX + size;	index++;
 		vertices[index] = randY + size;	index++;
-		vertices[index] = 0.f;	index++;
+		vertices[index] = 0.f;					index++;
+
 		//vertices[index] = (float)i;	index++;
+		}
+	}
+
+	glGenBuffers(1, &m_VBOQuads);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+
+	m_VBOQuads_VertexCount = 6 * count;
+}
+
+void Renderer::GenQuadsVBO_Vel(int count)
+{
+	float randX, randY;
+	float randVelX, randVelY, randVelZ;
+
+	float size = 0.002f;
+	float arraySize = count * 6 * 6;	// 3대신 4 // vertex개수
+	float *vertices = new float[arraySize];
+
+	for (int i = 0; i < count; i++) {
+		int index = i * 36;	// 24 // 한루프당 개수
+		randX = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+		randY = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+
+		randVelX = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+		randVelY = 2.f * (((float)rand() / RAND_MAX) - 0.5);
+		randVelZ = 0.f;
+
+		{
+			// 1번쨰
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 2번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 3번째
+			vertices[index] = randX + size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
+
+		}
+
+		{
+			// 4번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 5번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY - size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 6번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY + size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = randVelX;			index++;
+			vertices[index] = randVelY;			index++;
+			vertices[index] = randVelZ;			index++;
+			//vertices[index] = (float)i;	index++;
 		}
 	}
 
@@ -278,12 +380,15 @@ void Renderer::CreateProxyGeometry()
 }
 
 
-void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
-{
+void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
+
+	// ShaderType = 여러가지
+
 	//쉐이더 오브젝트 생성
 	GLuint ShaderObj = glCreateShader(ShaderType);
 
 	if (ShaderObj == 0) {
+		//Shader 생성 실패
 		fprintf(stderr, "Error creating shader type %d\n", ShaderType);
 	}
 
@@ -503,7 +608,7 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	return temp;
 }
 
-float radian = 1.f;
+float radian = 0.f;
 
 void Renderer::DrawRect()	// 사각형 그리기
 {
@@ -536,8 +641,8 @@ void Renderer::DrawRect()	// 사각형 그리기
 	glDrawArrays(GL_TRIANGLES, 0, 6);	// 그려라! 함수, GL_TRIANGLES : 프리미티브 (삼각형 형태로 안을 칠해라), 6개의 vertex를 그려라
 	// 0번째에서 시작을 해서 6개씩 읽으면서 그려라
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(aPosID);
+	glDisableVertexAttribArray(aColID);
 }
 
 void Renderer::DrawTriangle()
@@ -609,5 +714,45 @@ void Renderer::DrawProxyGeometry()
 		glDrawArrays(GL_LINE_STRIP, 0, m_Count_ProxyGeo);
 
 		glDisableVertexAttribArray(attribPosition);
+	}
+}
+
+float p_time = 0.f;
+
+void Renderer::DrawSimpleVel()
+{
+	glUseProgram(m_SimpleVelShader);
+
+	GLuint uTimeID = glGetUniformLocation(m_SimpleVelShader, "u_Time");
+	GLuint uPosID = glGetAttribLocation(m_SimpleVelShader, "a_Position");
+	GLuint uVelID = glGetAttribLocation(m_SimpleVelShader, "a_Vel");
+	
+	p_time +=1.f;
+	glUniform1f(uTimeID, p_time);
+
+	glEnableVertexAttribArray(uPosID);	// 시험에서 잘틀려
+	glEnableVertexAttribArray(uVelID);
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBOQuads);
+
+		//
+		// x1, y1, z1, vx1, vy1, vz1,  x2, y2, z2, vx2, vy2, vz2, .......  로 저장
+		//
+
+		// uPosID는 위치만 가져와야되
+		glVertexAttribPointer(uPosID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+		// float 포인트 3개씩 읽어온다 (위치)
+		// float 포인트 처음부터 6개씩 건너 뛴다
+
+		// uVelID는 속도만 가져와야되
+		glVertexAttribPointer(uVelID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*)(sizeof(float)*3));
+		// float 포인트 3개씩 읽어온다 (위치)
+		// float 포인트 처음부터 6개씩 건너 뛴다
+		// 처음위치를 sizeof(float) * )만큼 변경한다.
+
+		glDrawArrays(GL_TRIANGLES, 0, m_VBOQuads_VertexCount);	// 3 == m_VBOQuads_VertexCount
+
+		glDisableVertexAttribArray(uPosID);
+		glDisableVertexAttribArray(uVelID);
 	}
 }

@@ -18,9 +18,7 @@ void main()
 
 	temp.x += 0.5 * cos(rad(u_Time));
 	temp.y += 0.5 * sin(rad(u_Time));
-	temp.z += 0.5 * cos(rad(u_Time));
 
 	//gl_Position = vec4(a_Position * 1.0, 1);	//rectangle  화면에 보이는 비율
-	gl_Position = vec4(temp, 1); // a_Position이면 통채로 넘어감
-
+	//gl_Position = vec4(temp, 1); // a_Position이면 통채로 넘어감
 }
