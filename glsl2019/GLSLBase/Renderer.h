@@ -26,6 +26,7 @@ public:
 	void DrawGridMesh();
 	void DrawProxyGeometry();
 	void DrawSimpleVel();
+	void DrawGravity();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -36,6 +37,7 @@ private:
 
 	void GenQuadsVBO(int count);
 	void GenQuadsVBO_Vel(int count);
+	void GenQuadsVBO_Gra(int count);
 	void GridMeshVBO();
 	void CreateProxyGeometry();
 
@@ -68,5 +70,6 @@ private:
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_SimpleVelShader = 0;
+	GLuint m_GravityShader = 0;
 };
 

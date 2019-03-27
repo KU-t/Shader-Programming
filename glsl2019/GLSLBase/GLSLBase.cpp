@@ -32,8 +32,8 @@ void RenderScene(void)
 	//g_Renderer->DrawRandRect();
 	//g_Renderer->DrawGredMesh();
 	//g_Renderer->DrawProxyGeometry();
-	g_Renderer->DrawSimpleVel();
-
+	//g_Renderer->DrawSimpleVel();
+	g_Renderer->DrawGravity();
 	glutSwapBuffers();
 }
 

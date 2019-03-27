@@ -35,10 +35,16 @@
     <None Include="Shaders\SolidRect.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\SimpleVel.fs">
+    <None Include="Shaders\0325SimpleVel.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\SimpleVel.vs">
+    <None Include="Shaders\0325SimpleVel.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0327Gravity.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0327Gravity.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
