@@ -27,6 +27,7 @@ public:
 	void DrawProxyGeometry();
 	void DrawSimpleVel();
 	void DrawGravity();
+	void DrawSinGraph();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -38,6 +39,7 @@ private:
 	void GenQuadsVBO(int count);
 	void GenQuadsVBO_Vel(int count);
 	void GenQuadsVBO_Gra(int count);
+	void GenQuadsVBO_Sin(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GridMeshVBO();
 	void CreateProxyGeometry();
 
@@ -67,9 +69,14 @@ private:
 	GLuint m_VBO_ProxyGeo = 0;
 	GLuint m_Count_ProxyGeo = 0;
 
+	//DrawSinGraph
+	GLuint m_VBO_SinGraph = 0;
+	GLuint m_Count_SinGraph = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_SimpleVelShader = 0;
 	GLuint m_GravityShader = 0;
+	GLuint m_SingraphShader = 0;
 };
 

@@ -177,6 +177,8 @@
     <None Include="Shaders\0325SimpleVel.vs" />
     <None Include="Shaders\0327Gravity.fs" />
     <None Include="Shaders\0327Gravity.vs" />
+    <None Include="Shaders\0401SinGraph.fs" />
+    <None Include="Shaders\0401SinGraph.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>
