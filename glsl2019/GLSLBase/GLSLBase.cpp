@@ -34,7 +34,9 @@ void RenderScene(void)
 	//g_Renderer->DrawProxyGeometry();
 	//g_Renderer->DrawSimpleVel();
 	//g_Renderer->DrawGravity();
-	g_Renderer->DrawSinGraph();
+	//g_Renderer->DrawSinGraph();
+	//g_Renderer->DrawDirectionSin();
+	g_Renderer->DrawFragmentBase();
 	glutSwapBuffers();
 }
 

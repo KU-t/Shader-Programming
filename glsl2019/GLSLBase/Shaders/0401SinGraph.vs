@@ -28,8 +28,8 @@ void main(){
 		}
 
 		else{
-			newPos.x += newTime * (a_StartLifeTime.y /3);
-			newPos.y += sin(newTime * 2 * PI) * (a_StartLifeTime.x / 3) * 0.5;
+			newPos.x += newTime * 0.3 * (a_StartLifeTime.y / 2);
+			newPos.y += sin(newTime * 2 * PI) * 0.5 * newTime * 0.3;
 		}
 	}
 	

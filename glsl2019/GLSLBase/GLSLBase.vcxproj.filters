@@ -53,6 +53,18 @@
     <None Include="Shaders\0401SinGraph.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\0403DirectionSinGraph.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0403DirectionSinGraph.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0408FragmentBase.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0408FragmentBase.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
