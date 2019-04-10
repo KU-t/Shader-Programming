@@ -28,12 +28,14 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SingraphShader = CompileShaders("./Shaders/0401SinGraph.vs", "./Shaders/0401SinGraph.fs");
 	m_DirectionSinShader = CompileShaders("./Shaders/0403DirectionSinGraph.vs", "./Shaders/0403DirectionSinGraph.fs");
 	m_FragmentBaseShader = CompileShaders("./Shaders/0408FragmentBase.vs", "./Shaders/0408FragmentBase.fs");
+	m_InterpolationBaseShader = CompileShaders("./Shaders/0410InterpolationBase.vs", "./Shaders/0410InterpolationBase.fs");
 	//Create VBOs
 	CreateVertexBufferObjects();
 }
 
-void Renderer::CreateVertexBufferObjects()
-{
+void Renderer::CreateVertexBufferObjects(){
+
+	/*{
 
 	float size = 0.02f;
 	// DrawRect()  init
@@ -72,6 +74,7 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBOLecture);	// 개수는 하나 방금 만든 m_VBOLecture를 집어넣고 만든다.
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture);	//	이놈을 올리는데 대상은 GL_ARRAY_BUFFER, 올린건  m_VBOLecture
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertex), triangleVertex, GL_STATIC_DRAW);	// 버퍼 데이타를 통해 gpu 메모리에 올리는 작업, triangleVertex 사이즈만큼 올릴거고 
+	}*/
 
 	//DrawRandRect() init
 	//GenQuadsVBO(1000);
@@ -95,7 +98,10 @@ void Renderer::CreateVertexBufferObjects()
 	//GenQuadsVBO_DirectionSin(100000, false, &m_VBO_DirectionSinGraph, &m_Count_DirectionSinGraph);
 
 	//DrawDirectionSin(); init
-	GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
+	//GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
+
+	//DrawInterpolation(); init
+	GenQuadsVBO_InterpolationBase(&m_VBO_InterpolationBase, &m_Count_InterpolationBase);
 }
 
 void Renderer::GenQuadsVBO(int count){
@@ -870,6 +876,156 @@ void Renderer::GenQuadsVBO_FragmentBase(int count, bool random, GLuint* ID, GLui
 	*ID = vboID;
 }
 
+void Renderer::GenQuadsVBO_InterpolationBase(GLuint * ID, GLuint * vCount){
+
+	int verticesPerQuad = 6;	// 사각형에 몇개의 vertex
+	int floatsPervertex = 3 + 2 + 5 + 5;	// xyz, uv, empty10
+
+	float size = 0.5f;
+	int arraySize =  verticesPerQuad * floatsPervertex;	 // vertex개수
+	float *vertices = new float[arraySize];
+
+	{
+		int index = 0;	 // 한루프당 개수
+
+		float randX = 0.f, randY = 0.f;
+
+		{
+			// 1번쨰
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 2번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 3번째
+			vertices[index] = randX + size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+		}
+
+		{
+			// 4번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 5번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY - size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 6번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY + size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+		}
+	}
+
+	GLuint vboID = 0;
+
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+
+	*vCount = verticesPerQuad;
+	*ID = vboID;
+}
+
 void Renderer::GridMeshVBO()
 {
 	float StartPointX = -0.5f;
@@ -1012,7 +1168,6 @@ void Renderer::CreateProxyGeometry()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*(pointCountX - 1)*(pointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
 }
 
-
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
 	// ShaderType = 여러가지
@@ -1125,6 +1280,7 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 
 	return ShaderProgram;
 }
+
 unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight)
 {
 	std::cout << "Loading bmp file " << imagepath << " ... " << std::endl;
@@ -1352,8 +1508,7 @@ void Renderer::DrawProxyGeometry()
 
 float p_time = 0.f;
 
-void Renderer::DrawSimpleVel()
-{
+void Renderer::DrawSimpleVel(){
 	glUseProgram(m_SimpleVelShader);
 
 	GLuint uTimeID = glGetUniformLocation(m_SimpleVelShader, "u_Time");
@@ -1536,5 +1691,33 @@ void Renderer::DrawFragmentBase() {
 		glDisableVertexAttribArray(aStartLifeRatioAmpID);
 		glDisableVertexAttribArray(aRandVID);
 		glDisableVertexAttribArray(aRGBID);
+	}
+}
+
+void Renderer::DrawInterpolationBase() {
+	GLuint Shader = m_InterpolationBaseShader;
+
+	glUseProgram(Shader);
+
+
+	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
+	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
+
+	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
+	glEnableVertexAttribArray(aUVID);
+
+	int ObjectVertex = 15;
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_InterpolationBase);
+
+		// 0x 1y 2z 3vx 4vy 5vz 6s 7l 8r 9a 
+
+		glVertexAttribPointer(aPosID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+		glVertexAttribPointer(aUVID, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+		
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_InterpolationBase);	// 3 == m_VBOQuads_VertexCount
+
+		glDisableVertexAttribArray(aPosID);
+		glDisableVertexAttribArray(aUVID);
 	}
 }

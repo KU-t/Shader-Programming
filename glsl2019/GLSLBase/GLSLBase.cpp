@@ -36,7 +36,8 @@ void RenderScene(void)
 	//g_Renderer->DrawGravity();
 	//g_Renderer->DrawSinGraph();
 	//g_Renderer->DrawDirectionSin();
-	g_Renderer->DrawFragmentBase();
+	//g_Renderer->DrawFragmentBase();
+	g_Renderer->DrawInterpolationBase();
 	glutSwapBuffers();
 }
 

@@ -30,6 +30,7 @@ public:
 	void DrawSinGraph();
 	void DrawDirectionSin();
 	void DrawFragmentBase();
+	void DrawInterpolationBase();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -44,6 +45,7 @@ private:
 	void GenQuadsVBO_Sin(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_DirectionSin(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_FragmentBase(int count, bool random, GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_InterpolationBase(GLuint * ID, GLuint * vCount);
 	void GridMeshVBO();
 	void CreateProxyGeometry();
 
@@ -85,6 +87,10 @@ private:
 	GLuint m_VBO_FragmentBase = 0;
 	GLuint m_Count_FragmentBase = 0;
 
+	//DrawInterpolationBase
+	GLuint m_VBO_InterpolationBase = 0;
+	GLuint m_Count_InterpolationBase = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_SimpleVelShader = 0;
@@ -92,5 +98,6 @@ private:
 	GLuint m_SingraphShader = 0;
 	GLuint m_DirectionSinShader = 0;
 	GLuint m_FragmentBaseShader = 0;
+	GLuint m_InterpolationBaseShader = 0;
 };
 

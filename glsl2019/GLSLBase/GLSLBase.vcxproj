@@ -183,6 +183,8 @@
     <None Include="Shaders\0403DirectionSinGraph.vs" />
     <None Include="Shaders\0408FragmentBase.fs" />
     <None Include="Shaders\0408FragmentBase.vs" />
+    <None Include="Shaders\0410InterpolationBase.fs" />
+    <None Include="Shaders\0410InterpolationBase.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>

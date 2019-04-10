@@ -65,6 +65,12 @@
     <None Include="Shaders\0408FragmentBase.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\0410InterpolationBase.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0410InterpolationBase.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
