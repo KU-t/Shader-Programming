@@ -33,6 +33,7 @@ public:
 	void DrawInterpolationBase();
 	void DrawRadar();
 	void FillAlpha(float alpha);
+	void DrawTextureMapping();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -49,6 +50,7 @@ private:
 	void GenQuadsVBO_FragmentBase(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_InterpolationBase(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Radar(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_TextureMapping(GLuint * ID, GLuint * vCount);
 	void GridMeshVBO();
 	void CreateProxyGeometry();
 
@@ -98,6 +100,10 @@ private:
 	GLuint m_VBO_Radar = 0;
 	GLuint m_Count_Radar = 0;
 
+	//DrawInterpolationBase
+	GLuint m_VBO_TextureMapping = 0;
+	GLuint m_Count_TextureMapping = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_SimpleVelShader = 0;
@@ -108,10 +114,11 @@ private:
 	GLuint m_InterpolationBaseShader = 0;
 	GLuint m_RadarShader = 0;
 	GLuint m_FillAlpha = 0;
+	GLuint m_TextureMapping = 0;
 
 	//Textures
-	GLuint m_ParticleTexture0 = 0;
-	GLuint m_ParticleTexture1 = 0;
-	GLuint m_ParticleTexture2 = 0;
+	GLuint m_TextureFence = 0;
+	GLuint m_TextureSky = 1;
+	GLuint m_Texture2 = 2;
 };
 
