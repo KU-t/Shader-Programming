@@ -185,6 +185,10 @@
     <None Include="Shaders\0408FragmentBase.vs" />
     <None Include="Shaders\0410InterpolationBase.fs" />
     <None Include="Shaders\0410InterpolationBase.vs" />
+    <None Include="Shaders\0415FillAlpha.fs" />
+    <None Include="Shaders\0415FillAlpha.vs" />
+    <None Include="Shaders\0415Radar.fs" />
+    <None Include="Shaders\0415Radar.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>
