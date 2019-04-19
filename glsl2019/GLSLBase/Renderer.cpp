@@ -2079,13 +2079,6 @@ void Renderer::DrawRadar() {
 	}
 }
 
-void Renderer::FillAlpha(float alpha) {
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, alpha);
-
-}
-
 void Renderer::DrawTextureMapping() {
 	GLuint Shader = m_TextureMapping;
 

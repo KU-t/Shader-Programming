@@ -25,7 +25,6 @@ void RenderScene(void)
 	// 1. 화면을 지운다.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	//g_Renderer->FillAlpha(0.01);
 
 	// 2. 화면을 그린다.
 	//g_Renderer->DrawRect();

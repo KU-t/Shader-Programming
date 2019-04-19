@@ -32,7 +32,6 @@ public:
 	void DrawFragmentBase();
 	void DrawInterpolationBase();
 	void DrawRadar();
-	void FillAlpha(float alpha);
 	void DrawTextureMapping();
 
 private:
