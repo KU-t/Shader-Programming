@@ -1,10 +1,8 @@
 #version 450
 
-in vec4 v_Color;
-
 layout(location=0) out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(v_Color);	// RGBA
+	FragColor = vec4(0,0,1,1);	// RGBA
 }

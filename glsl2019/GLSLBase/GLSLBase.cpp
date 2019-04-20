@@ -17,8 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer *g_Renderer = NULL;
 
-int g_WindowSizeX = 500;
-int g_WindowSizeY = 500;
+int g_WindowSizeX = 800;
+int g_WindowSizeY = 800;
 
 void RenderScene(void)
 {
@@ -30,8 +30,7 @@ void RenderScene(void)
 	//g_Renderer->DrawRect();
 	//g_Renderer->DrawTriangle();
 	//g_Renderer->DrawRandRect();
-	//g_Renderer->DrawGredMesh();
-	//g_Renderer->DrawProxyGeometry();
+	//g_Renderer->DrawGridMesh();
 	//g_Renderer->DrawSimpleVel();
 	//g_Renderer->DrawGravity();
 	//g_Renderer->DrawSinGraph();

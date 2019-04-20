@@ -71,12 +71,6 @@
     <None Include="Shaders\0410InterpolationBase.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0415FillAlpha.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\0415FillAlpha.vs">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="Shaders\0415Radar.fs">
       <Filter>Shader</Filter>
     </None>
@@ -87,6 +81,18 @@
       <Filter>Shader</Filter>
     </None>
     <None Include="Shaders\0417TextureMapping.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0313RandRect.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0313RandRect.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0317GridMesh.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0317GridMesh.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>

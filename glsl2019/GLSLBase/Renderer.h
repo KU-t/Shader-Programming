@@ -24,7 +24,6 @@ public:
 	void DrawTriangle();
 	void DrawRandRect();
 	void DrawGridMesh();
-	void DrawProxyGeometry();
 	void DrawSimpleVel();
 	void DrawGravity();
 	void DrawSinGraph();
@@ -41,7 +40,10 @@ private:
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects(); 
 
-	void GenQuadsVBO(int count);
+	void GenQuadsVBO_Rect();
+	void GenQuadsVBO_Tri();
+	void GenQuadsVBO_Rand(int count);
+	void GenQuadsVBO_GridMesh();
 	void GenQuadsVBO_Vel(int count);
 	void GenQuadsVBO_Gra(int count);
 	void GenQuadsVBO_Sin(int count, bool random, GLuint * ID, GLuint * vCount);
@@ -50,8 +52,7 @@ private:
 	void GenQuadsVBO_InterpolationBase(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Radar(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureMapping(GLuint * ID, GLuint * vCount);
-	void GridMeshVBO();
-	void CreateProxyGeometry();
+
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -65,19 +66,23 @@ private:
 	GLuint m_VBORectcolor = 0;
 
 	//DrawTriangle
-	GLuint m_VBOLecture = 0;
+	GLuint m_VBOTri = 0;
 
 	//DrawRandRect
-	GLuint m_VBOQuads = 0;
-	GLuint m_VBOQuads_VertexCount = 0;
+	GLuint m_VBORandQuads = 0;
+	GLuint m_VBORandQuads_VertexCount = 0;
 
 	//DrawGridmesh
 	GLuint m_VBOGrid = 0;
 	GLuint m_VBOGrid_VertexCount = 0;
 
-	//DrawProxygeometry
-	GLuint m_VBO_ProxyGeo = 0;
-	GLuint m_Count_ProxyGeo = 0;
+	//DrawSimpleVel
+	GLuint m_VBOSimpleVel = 0;
+	GLuint m_VBOSimpleVel_VertexCount = 0;
+
+	//DrawGravity
+	GLuint m_VBOGravity = 0;
+	GLuint m_VBOGravity_VertexCount = 0;
 
 	//DrawSinGraph
 	GLuint m_VBO_SinGraph = 0;
@@ -95,16 +100,18 @@ private:
 	GLuint m_VBO_InterpolationBase = 0;
 	GLuint m_Count_InterpolationBase = 0;
 
-	//DrawInterpolationBase
+	//DrawRadar
 	GLuint m_VBO_Radar = 0;
 	GLuint m_Count_Radar = 0;
 
-	//DrawInterpolationBase
+	//DrawTextureMapping
 	GLuint m_VBO_TextureMapping = 0;
 	GLuint m_Count_TextureMapping = 0;
 
 	//Shaders
 	GLuint m_SolidRectShader = 0;
+	GLuint m_RandQuadsShader = 0;
+	GLuint m_GridMeshShader = 0;
 	GLuint m_SimpleVelShader = 0;
 	GLuint m_GravityShader = 0;
 	GLuint m_SingraphShader = 0;
@@ -112,7 +119,6 @@ private:
 	GLuint m_FragmentBaseShader = 0;
 	GLuint m_InterpolationBaseShader = 0;
 	GLuint m_RadarShader = 0;
-	GLuint m_FillAlpha = 0;
 	GLuint m_TextureMapping = 0;
 
 	//Textures

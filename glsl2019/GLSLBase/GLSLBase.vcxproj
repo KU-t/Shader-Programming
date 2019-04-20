@@ -173,6 +173,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\0313RandRect.fs" />
+    <None Include="Shaders\0313RandRect.vs" />
+    <None Include="Shaders\0317GridMesh.fs" />
+    <None Include="Shaders\0317GridMesh.vs" />
     <None Include="Shaders\0325SimpleVel.fs" />
     <None Include="Shaders\0325SimpleVel.vs" />
     <None Include="Shaders\0327Gravity.fs" />
@@ -185,8 +189,6 @@
     <None Include="Shaders\0408FragmentBase.vs" />
     <None Include="Shaders\0410InterpolationBase.fs" />
     <None Include="Shaders\0410InterpolationBase.vs" />
-    <None Include="Shaders\0415FillAlpha.fs" />
-    <None Include="Shaders\0415FillAlpha.vs" />
     <None Include="Shaders\0415Radar.fs" />
     <None Include="Shaders\0415Radar.vs" />
     <None Include="Shaders\0417TextureMapping.fs" />
