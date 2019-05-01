@@ -193,6 +193,8 @@
     <None Include="Shaders\0415Radar.vs" />
     <None Include="Shaders\0417TextureMapping.fs" />
     <None Include="Shaders\0417TextureMapping.vs" />
+    <None Include="Shaders\0429TextureMaking.fs" />
+    <None Include="Shaders\0429TextureMaking.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>

@@ -30,8 +30,8 @@ void main()
 		float remaininglife = lifeTime - life;
 
 		if(u_Reapeat == true) {
-			remaininglife = 1.f;
-			newTime = mod(newTime, lifeTime);
+			remaininglife = 1.f; // 죽는 시간이 사라짐
+			newTime = mod(newTime, lifeTime); // 남는 시간동안 반복
 		}
 
 		if( remaininglife < 0) {

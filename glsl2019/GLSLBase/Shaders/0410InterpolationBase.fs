@@ -16,7 +16,7 @@ void main(){
 	float pointGrey = 0;
 
 	for(int i = 0; i < 5; ++i){
-		vec2 newPoint = c_Points[i];
+		vec2 newPoint = u_Points[i];
 		vec2 newVec = newPoint - newUV;
 		float distance = sqrt(newVec.x*newVec.x + newVec.y*newVec.y);
 

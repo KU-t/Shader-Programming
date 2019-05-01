@@ -26,16 +26,15 @@ void main(){
 		float temp = (distance - newTime) / ringwidth;
 		pointGrey += temp;
 
-			for(int i = 0; i < 5; ++i){
-			vec2 newPoint = u_Points[i];
-			vec2 newVec = newPoint - newUV;
-			float distance = sqrt(newVec.x*newVec.x + newVec.y*newVec.y);
+		for(int i = 0; i < 5; ++i){
+		vec2 newPoint = u_Points[i];
+		vec2 newVec = newPoint - newUV;
+		float distance = sqrt(newVec.x*newVec.x + newVec.y*newVec.y);
 
 			if(distance < 0.1){	// 그리는 원의 반지름
 				pointGrey += 0.5 * pow((1 - (distance / 0.1)), 10); // * distance 가중치
 			}
 		}
-
 	}
 
 	FragColor = vec4(pointGrey);

@@ -17,8 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer *g_Renderer = NULL;
 
-int g_WindowSizeX = 800;
-int g_WindowSizeY = 800;
+int g_WindowSizeX = 400;
+int g_WindowSizeY = 400;
 
 void RenderScene(void)
 {
@@ -38,7 +38,8 @@ void RenderScene(void)
 	//g_Renderer->DrawFragmentBase();
 	//g_Renderer->DrawInterpolationBase();
 	//g_Renderer->DrawRadar();
-	g_Renderer->DrawTextureMapping();
+	//g_Renderer->DrawTextureMapping();
+	g_Renderer->DrawTextureMaking();
 
 	glutSwapBuffers();
 }

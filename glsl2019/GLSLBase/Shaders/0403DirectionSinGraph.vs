@@ -9,7 +9,7 @@ uniform float u_Time;
 
 const float PI = 3.141592;
 const mat3 c_RP = mat3(0, -1 , 0, 1, 0, 0, 0, 0, 0);
-const vec3 c_Gravity = vec3(0, -5, 0);
+const vec3 c_Gravity = vec3(0, -0, 0);
 
 void main(){
 	vec3 newPos = a_Position.xyx;

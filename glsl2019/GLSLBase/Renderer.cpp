@@ -33,10 +33,12 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_InterpolationBaseShader = CompileShaders("./Shaders/0410InterpolationBase.vs", "./Shaders/0410InterpolationBase.fs");
 	m_RadarShader = CompileShaders("./Shaders/0415Radar.vs", "./Shaders/0415Radar.fs");
 	m_TextureMapping = CompileShaders("./Shaders/0417TextureMapping.vs", "./Shaders/0417TextureMapping.fs");
-	
+	m_TextureMaking = CompileShaders("./Shaders/0429TextureMaking.vs", "./Shaders/0429TextureMaking.fs");
+
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
 	m_TextureSky = CreatePngTexture("./Textures/Sky.png");
+	m_TextureLUFFY = CreatePngTexture("./Textures/LUFFY.png");
 	//m_ParticleTexture2 = CreatePngTexture("./Textures/t2.png");
 
 	//Create VBOs
@@ -45,40 +47,43 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 void Renderer::CreateVertexBufferObjects(){
 	//DrawRect() init
-	GenQuadsVBO_Rect();
+	//GenQuadsVBO_Rect();
 
 	//DrawTri() init
 	//GenQuadsVBO_Tri();
 
 	//DrawRandRect() init
-	GenQuadsVBO_Rand(1000);
+	//GenQuadsVBO_Rand(1000);
 
 	//DrawGridMesh() init
-	GenQuadsVBO_GridMesh();
+	//GenQuadsVBO_GridMesh();
 
 	//DrawSimpleVel() init
-	GenQuadsVBO_Vel(1000);
+	//GenQuadsVBO_Vel(1000);
 
 	//DrawGravity(); init
-	GenQuadsVBO_Gra(1000);
+	//GenQuadsVBO_Gra(1000);
 
 	//DrawSinGraph(); init
-	GenQuadsVBO_Sin(1000, false, &m_VBO_SinGraph, &m_Count_SinGraph);
+	//GenQuadsVBO_Sin(1000, false, &m_VBO_SinGraph, &m_Count_SinGraph);
 
 	//DrawDirectionSin(); init
-	GenQuadsVBO_DirectionSin(100000, false, &m_VBO_DirectionSinGraph, &m_Count_DirectionSinGraph);
+	//GenQuadsVBO_DirectionSin(100000, false, &m_VBO_DirectionSinGraph, &m_Count_DirectionSinGraph);
 
 	//DrawDirectionSin(); init
-	GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
+	//GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
 
 	//DrawInterpolation(); init
-	GenQuadsVBO_InterpolationBase(&m_VBO_InterpolationBase, &m_Count_InterpolationBase);
+	//GenQuadsVBO_InterpolationBase(&m_VBO_InterpolationBase, &m_Count_InterpolationBase);
 
 	//DrawRadar(); init
-	GenQuadsVBO_Radar(&m_VBO_Radar, &m_Count_Radar);
+	//GenQuadsVBO_Radar(&m_VBO_Radar, &m_Count_Radar);
 
 	//DrawTextureMapping(); init
-	GenQuadsVBO_TextureMapping(&m_VBO_TextureMapping, &m_Count_TextureMapping);
+	//GenQuadsVBO_TextureMapping(&m_VBO_TextureMapping, &m_Count_TextureMapping);
+
+	//DrawTextureSampling(); init
+	GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -110,7 +115,7 @@ void Renderer::GenQuadsVBO_Rect() {
 	1.0, 0.0, 0.f, 1.f //Triangle2
 	};
 
-	glGenBuffers(1, &m_VBORectcolor);	// m_VBORect에 rect[] 만들겠다.
+	glGenBuffers(1, &m_VBORectcolor);	// m_VBORectcolor에 color[] 만들겠다.
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORectcolor);	// GL_ARRAY_BUFFER 는 하나만 존재, Bind 조심해서 설정
 	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);	// GPU상으로 올림 , GL_STATIC_DRAW : 바뀌지 않는 값 (여러 유형 있음)
 
@@ -120,14 +125,14 @@ void Renderer::GenQuadsVBO_Tri() {
 	float triangleVertex[] = { -1,0,0,0,1,0,1,0,0 };	//9float
 
 	glGenBuffers(1, &m_VBOTri);	// 개수는 하나 방금 만든 m_VBOLecture를 집어넣고 만든다.
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTri);	//	이놈을 올리는데 대상은 GL_ARRAY_BUFFER, 올린건  m_VBOLecture
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTri);	//	이놈을 올리는데 대상은 GL_ARRAY_BUFFER, 올린건  m_VBOTri
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertex), triangleVertex, GL_STATIC_DRAW);	// 버퍼 데이타를 통해 gpu 메모리에 올리는 작업, triangleVertex 사이즈만큼 올릴거고 
 }
 
 void Renderer::GenQuadsVBO_Rand(int count){
 	float randX, randY;
 	float size = 0.002f;
-	float arraySize = count * 3 * 6;	// 3대신 4
+	float arraySize = count * 3 * 6;	// 사각형 1개에 6개의 점/ 1개의 점에는 3개의 xyz좌표 / 사각형 count개
 	float *vertices = new float[arraySize];
 
 	for (int i = 0; i < count; i++) {
@@ -200,7 +205,6 @@ void Renderer::GenQuadsVBO_GridMesh()
 
 	float* point = new float[PointCountX * PointCountY * 2];
 	float* vertices = new float[(PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3];
-	m_VBOGrid_VertexCount = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
 
 	for (int x = 0; x < PointCountX; x++) {
 		for (int y = 0; y < PointCountY; y++) {
@@ -243,6 +247,7 @@ void Renderer::GenQuadsVBO_GridMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOGrid);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
 
+	m_VBOGrid_VertexCount = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
 }
 
 void Renderer::GenQuadsVBO_Vel(int count)
@@ -1406,6 +1411,179 @@ void Renderer::GenQuadsVBO_TextureMapping(GLuint * ID, GLuint * vCount) {
 	*ID = vboID;
 }
 
+void Renderer::GenQuadsVBO_TextureMaking(GLuint * ID, GLuint * vCount) {
+
+	int verticesPerQuad = 6;	// 사각형에 몇개의 vertex
+	int floatsPervertex = 3 + 2 + 5 + 5;	// xyz, uv, empty10
+
+	float size = 0.5f;
+	int arraySize = verticesPerQuad * floatsPervertex;	 // vertex개수
+	float *vertices = new float[arraySize];
+
+	{
+		int index = 0;	 // 한루프당 개수
+
+		float randX = 0.f, randY = 0.f;
+
+		{
+			// 1번쨰
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 2번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 3번째
+			vertices[index] = randX + size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+		}
+
+		{
+			// 4번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 5번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY - size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 6번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY + size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+		}
+	}
+
+	GLuint vboID = 0;
+
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+
+	*vCount = verticesPerQuad;
+	*ID = vboID;
+
+	static const GLulong checkerboard[] =
+	{
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF
+	};
+
+	glGenTextures(1, &m_TextureID);
+	glBindTexture(GL_TEXTURE_2D, m_TextureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerboard);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+}
+
+
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
 	// ShaderType = 여러가지
@@ -1682,7 +1860,7 @@ void Renderer::DrawTriangle()
 	radian += 0.1;
 	glUniform1f(rad, radian);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTri);	// ***************삼각형 그리기
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTri);	// 
 
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0
 
@@ -1704,7 +1882,7 @@ void Renderer::DrawRandRect()
 
 		glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);// 0번지에서 3개식 float형태로 몰라도되고, 0,0	3==4
 
-		glDrawArrays(GL_TRIANGLES, 0, m_VBORandQuads_VertexCount);	// 3 == m_VBOQuads_VertexCount
+		glDrawArrays(GL_TRIANGLES, 0, m_VBORandQuads_VertexCount);	// 6 * count == m_VBOQuads_VertexCount
 
 		glDisableVertexAttribArray(attribPosition);
 	}
@@ -1759,7 +1937,7 @@ void Renderer::DrawSimpleVel(){
 		// float 포인트 처음부터 6개씩 건너 뛴다
 		// 처음위치를 sizeof(float) * )만큼 변경한다.
 
-		glDrawArrays(GL_TRIANGLES, 0, m_VBOSimpleVel_VertexCount);	// 3 == m_VBOQuads_VertexCount
+		glDrawArrays(GL_TRIANGLES, 0, m_VBOSimpleVel_VertexCount);	// 6 * count == m_VBOQuads_VertexCount
 
 		glDisableVertexAttribArray(uPosID);
 		glDisableVertexAttribArray(uVelID);
@@ -1790,10 +1968,11 @@ void Renderer::DrawGravity(){
 		glVertexAttribPointer(aVelID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (GLvoid*)(sizeof(float) * 3));
 		glVertexAttribPointer(aStartLife, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (GLvoid*)(sizeof(float) * 6));
 		
-		glDrawArrays(GL_TRIANGLES, 0, m_VBOGravity_VertexCount);	// 3 == m_VBOQuads_VertexCount
+		glDrawArrays(GL_TRIANGLES, 0, m_VBOGravity_VertexCount);	// 6 * count == m_VBOQuads_VertexCount
 
 		glDisableVertexAttribArray(aPosID);
 		glDisableVertexAttribArray(aVelID);
+		glDisableVertexAttribArray(aStartLife);
 	}
 }
 
@@ -1803,8 +1982,8 @@ void Renderer::DrawSinGraph() {
 	glUseProgram(Shader);
 	
 	GLuint uTimeID = glGetUniformLocation(Shader, "u_Time");
-	glUniform1f(uTimeID, p_time);
 	p_time += 1.f / 6000.f;
+	glUniform1f(uTimeID, p_time);
 
 	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
 
@@ -1835,8 +2014,8 @@ void Renderer::DrawDirectionSin() {
 	glUseProgram(Shader);
 
 	GLuint uTimeID = glGetUniformLocation(Shader, "u_Time");
-	glUniform1f(uTimeID, p_time);
 	p_time += 1.f / 6000.f;
+	glUniform1f(uTimeID, p_time);
 
 	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
 	GLuint aVelID = glGetAttribLocation(Shader, "a_Vel");
@@ -1852,7 +2031,7 @@ void Renderer::DrawDirectionSin() {
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_DirectionSinGraph);
 
-		// 0x 1y 2z 3vx 4vy 5vz 6s 7l 8r 9a 
+		// 0x 1y 2z 3vx 4vy 5vz 6s 7l 8r 9a 10 11 
 
 		glVertexAttribPointer(aPosID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
 		glVertexAttribPointer(aVelID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
@@ -1924,6 +2103,11 @@ void Renderer::DrawInterpolationBase() {
 	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
 	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
 
+	float v[] = {0,0,0,0.2,0.2,0.2,0.2,0,0.1,0.1};
+	GLuint uV = glGetUniformLocation(Shader, "u_Points");
+	glUniform2fv(uV, 5, v);
+
+
 	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
 	glEnableVertexAttribArray(aUVID);
 
@@ -1948,7 +2132,7 @@ void Renderer::DrawRadar() {
 
 	glUseProgram(Shader);
 
-	float points[] = { -0.25, 0.25, -0.25, -0.25, -0, 0, 0.25, -0.25, 0.25, 0.25 };
+	float points[] = { -0.25, 0.25, -0.25, -0.25, -0.1, 0.1, 0.25, -0.25, 0.25, 0.25 };
 
 	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
 	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
@@ -1958,13 +2142,8 @@ void Renderer::DrawRadar() {
 
 	GLuint uTimeID = glGetUniformLocation(Shader, "u_Time");
 	p_time += 0.0001f;
+
 	glUniform1f(uTimeID, p_time);
-
-	//int uTex = glGetUniformLocation(Shader, "uTexSampler");
-	//glUniform1i(uTex, 0);
-	//glActiveTexture(GL_TEXTURE0);	// 0번지 텍스쳐를쓰겠다
-	//glBindTexture(GL_TEXTURE_2D, m_ParticleTexture0);
-
 
 	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
 	glEnableVertexAttribArray(aUVID);
@@ -2012,6 +2191,45 @@ void Renderer::DrawTextureMapping() {
 
 		// 트라이앵글을 그릴때 총 m_Count_TextureMapping개의 삼각형을 이용해 그린다.
 		glDrawArrays(GL_TRIANGLES, 0, m_Count_TextureMapping);
+
+		glDisableVertexAttribArray(aPosID);
+		glDisableVertexAttribArray(aUVID);
+	}
+}
+
+void Renderer::DrawTextureMaking() {
+	GLuint Shader = m_TextureMaking;
+
+	glUseProgram(Shader);// 이 프로그램을 쓰겠다. (==Shader)
+
+	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");//Shader의 s_Position을
+	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
+
+	GLuint uTimeID = glGetUniformLocation(Shader, "u_Time");
+	p_time += 0.0001;
+	glUniform1f(uTimeID, p_time);
+
+	GLuint uTexID = glGetUniformLocation(Shader, "u_Texture");
+	glUniform1i(uTexID, 0);
+	glActiveTexture(GL_TEXTURE0);
+	//BindTexture != BindBuffer
+	glBindTexture(GL_TEXTURE_2D, m_TextureLUFFY);
+
+
+	//attribute 사용
+	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
+	glEnableVertexAttribArray(aUVID);
+
+
+	int ObjectVertex = 15;
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TextureMaking);
+
+		glVertexAttribPointer(aPosID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+		glVertexAttribPointer(aUVID, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+		// 트라이앵글을 그릴때 총 m_Count_TextureMapping개의 삼각형을 이용해 그린다.
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_TextureMaking);
 
 		glDisableVertexAttribArray(aPosID);
 		glDisableVertexAttribArray(aUVID);

@@ -11,7 +11,7 @@ uniform float u_Time;
 
 void main(){
 	
-	vec4 newcolor = vec4(v_UV,0,1);
+	vec4 newcolor = vec4(v_UV, 0,1);
 
 	float rad = sin((v_UV.x + u_Time) * 2 * PI);
 
