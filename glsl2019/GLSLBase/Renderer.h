@@ -33,6 +33,7 @@ public:
 	void DrawRadar();
 	void DrawTextureMapping();
 	void DrawTextureMaking();
+	void DrawTextureTransUV();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -54,6 +55,7 @@ private:
 	void GenQuadsVBO_Radar(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureMapping(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureMaking(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_TextureTransUV(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -114,6 +116,10 @@ private:
 	GLuint m_Count_TextureMaking = 0;
 	GLuint m_TextureID = 0;
 
+	//DrawTextureTransUV
+	GLuint m_VBO_TextureTransUV = 0;
+	GLuint m_Count_TextureTransUV = 0;
+	
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_RandQuadsShader = 0;
@@ -127,10 +133,12 @@ private:
 	GLuint m_RadarShader = 0;
 	GLuint m_TextureMapping = 0;
 	GLuint m_TextureMaking = 0;
+	GLuint m_TextureTransUV = 0;
 
 	//Textures
 	GLuint m_TextureFence = 0;
-	GLuint m_TextureSky = 1;
-	GLuint m_TextureLUFFY = 2;
+	GLuint m_TextureSky = 0;
+	GLuint m_TextureLUFFY = 0;
+	GLuint m_TextureRGB = 0;
 };
 

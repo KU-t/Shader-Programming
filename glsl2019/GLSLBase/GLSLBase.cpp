@@ -39,7 +39,8 @@ void RenderScene(void)
 	//g_Renderer->DrawInterpolationBase();
 	//g_Renderer->DrawRadar();
 	//g_Renderer->DrawTextureMapping();
-	g_Renderer->DrawTextureMaking();
+	//g_Renderer->DrawTextureMaking();
+	g_Renderer->DrawTextureTransUV();
 
 	glutSwapBuffers();
 }

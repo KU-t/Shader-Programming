@@ -34,11 +34,14 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_RadarShader = CompileShaders("./Shaders/0415Radar.vs", "./Shaders/0415Radar.fs");
 	m_TextureMapping = CompileShaders("./Shaders/0417TextureMapping.vs", "./Shaders/0417TextureMapping.fs");
 	m_TextureMaking = CompileShaders("./Shaders/0429TextureMaking.vs", "./Shaders/0429TextureMaking.fs");
+	m_TextureTransUV = CompileShaders("./Shaders/0501TextureTransUV.vs", "./Shaders/0501TextureTransUV.fs");
+
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
 	m_TextureSky = CreatePngTexture("./Textures/Sky.png");
 	m_TextureLUFFY = CreatePngTexture("./Textures/LUFFY.png");
+	m_TextureRGB = CreatePngTexture("./Textures/rgb.png");
 	//m_ParticleTexture2 = CreatePngTexture("./Textures/t2.png");
 
 	//Create VBOs
@@ -83,7 +86,11 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_TextureMapping(&m_VBO_TextureMapping, &m_Count_TextureMapping);
 
 	//DrawTextureSampling(); init
-	GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
+	//GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
+
+	//Draw1(); init
+	GenQuadsVBO_TextureTransUV(&m_VBO_TextureTransUV, &m_Count_TextureTransUV);
+
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -1583,6 +1590,177 @@ void Renderer::GenQuadsVBO_TextureMaking(GLuint * ID, GLuint * vCount) {
 
 }
 
+void Renderer::GenQuadsVBO_TextureTransUV(GLuint * ID, GLuint * vCount) {
+
+	int verticesPerQuad = 6;	// 사각형에 몇개의 vertex
+	int floatsPervertex = 3 + 2 + 5 + 5;	// xyz, uv, empty10
+
+	float size = 0.5f;
+	int arraySize = verticesPerQuad * floatsPervertex;	 // vertex개수
+	float *vertices = new float[arraySize];
+
+	{
+		int index = 0;	 // 한루프당 개수
+
+		float randX = 0.f, randY = 0.f;
+
+		{
+			// 1번쨰
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 2번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 3번째
+			vertices[index] = randX + size;	index++;
+			vertices[index] = randY + size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+		}
+
+		{
+			// 4번째
+			vertices[index] = randX - size;	index++;
+			vertices[index] = randY - size;	index++;
+			vertices[index] = 0.f;					index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 5번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY - size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 0.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+
+			// 6번째
+			vertices[index] = randX + size;		index++;
+			vertices[index] = randY + size;		index++;
+			vertices[index] = 0.f;						index++;
+
+			vertices[index] = 1.f;			index++;
+			vertices[index] = 1.f;			index++;
+
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			vertices[index] = 0.f;			index++;
+			//vertices[index] = (float)i;	index++;
+		}
+	}
+
+	GLuint vboID = 0;
+
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+
+	*vCount = verticesPerQuad;
+	*ID = vboID;
+
+	static const GLulong checkerboard[] =
+	{
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+	0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
+	0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF
+	};
+
+	glGenTextures(1, &m_TextureID);
+	glBindTexture(GL_TEXTURE_2D, m_TextureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerboard);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+}
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
@@ -2230,6 +2408,45 @@ void Renderer::DrawTextureMaking() {
 
 		// 트라이앵글을 그릴때 총 m_Count_TextureMapping개의 삼각형을 이용해 그린다.
 		glDrawArrays(GL_TRIANGLES, 0, m_Count_TextureMaking);
+
+		glDisableVertexAttribArray(aPosID);
+		glDisableVertexAttribArray(aUVID);
+	}
+}
+
+void Renderer::DrawTextureTransUV() {
+	GLuint Shader = m_TextureTransUV;
+
+	glUseProgram(Shader);// 이 프로그램을 쓰겠다. (==Shader)
+
+	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");//Shader의 s_Position을
+	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
+
+	GLuint uTimeID = glGetUniformLocation(Shader, "u_Time");
+	p_time += 0.0001;
+	glUniform1f(uTimeID, p_time);
+
+	GLuint uTexID = glGetUniformLocation(Shader, "u_Texture");
+	glUniform1i(uTexID, 0);
+	glActiveTexture(GL_TEXTURE0);
+	//BindTexture != BindBuffer
+	glBindTexture(GL_TEXTURE_2D, m_TextureRGB);
+
+
+	//attribute 사용
+	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
+	glEnableVertexAttribArray(aUVID);
+
+
+	int ObjectVertex = 15;
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TextureTransUV);
+
+		glVertexAttribPointer(aPosID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+		glVertexAttribPointer(aUVID, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+		// 트라이앵글을 그릴때 총 m_Count_TextureMapping개의 삼각형을 이용해 그린다.
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_TextureTransUV);
 
 		glDisableVertexAttribArray(aPosID);
 		glDisableVertexAttribArray(aUVID);

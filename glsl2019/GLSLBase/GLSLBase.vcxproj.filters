@@ -101,6 +101,12 @@
     <None Include="Shaders\0429TextureMaking.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\0501.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0501.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
