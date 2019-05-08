@@ -40,7 +40,8 @@ void RenderScene(void)
 	//g_Renderer->DrawRadar();
 	//g_Renderer->DrawTextureMapping();
 	//g_Renderer->DrawTextureMaking();
-	g_Renderer->DrawTextureTransUV();
+	//g_Renderer->DrawTextureTransUV();
+	g_Renderer->DrawTextures();
 
 	glutSwapBuffers();
 }

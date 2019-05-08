@@ -34,6 +34,7 @@ public:
 	void DrawTextureMapping();
 	void DrawTextureMaking();
 	void DrawTextureTransUV();
+	void DrawTextures();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -56,6 +57,7 @@ private:
 	void GenQuadsVBO_TextureMapping(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureMaking(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureTransUV(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_Textures(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -119,6 +121,10 @@ private:
 	//DrawTextureTransUV
 	GLuint m_VBO_TextureTransUV = 0;
 	GLuint m_Count_TextureTransUV = 0;
+
+	//DrawTextures
+	GLuint m_VBO_Textures = 0;
+	GLuint m_Count_Textures = 0;
 	
 	//Shaders
 	GLuint m_SolidRectShader = 0;
@@ -134,8 +140,17 @@ private:
 	GLuint m_TextureMapping = 0;
 	GLuint m_TextureMaking = 0;
 	GLuint m_TextureTransUV = 0;
+	GLuint m_Textures = 0;
 
 	//Textures
+	GLuint gTextureID = 0;
+	GLuint gTextureID0 = 0;
+	GLuint gTextureID1 = 0;
+	GLuint gTextureID2 = 0;
+	GLuint gTextureID3 = 0;
+	GLuint gTextureID4 = 0;
+	GLuint gTextureID5 = 0;
+
 	GLuint m_TextureFence = 0;
 	GLuint m_TextureSky = 0;
 	GLuint m_TextureLUFFY = 0;
