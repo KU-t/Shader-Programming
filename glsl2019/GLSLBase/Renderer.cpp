@@ -37,14 +37,16 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TextureMaking = CompileShaders("./Shaders/0429TextureMaking.vs", "./Shaders/0429TextureMaking.fs");
 	m_TextureTransUV = CompileShaders("./Shaders/0501TextureTransUV.vs", "./Shaders/0501TextureTransUV.fs");
 	m_Textures = CompileShaders("./Shaders/0508Textures.vs", "./Shaders/0508Textures.fs");
-
+	m_TexturesAnimation = CompileShaders("./Shaders/0513Animation.vs", "./Shaders/0513Animation.fs");
+	m_TexturesRect = CompileShaders("./Shaders/0515TextureNumber.vs", "./Shaders/0515TextureNumber.fs");
+	m_TexturesRects = CompileShaders("./Shaders/0515TextureNumbers.vs", "./Shaders/0515TextureNumbers.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
 	m_TextureSky = CreatePngTexture("./Textures/Sky.png");
 	m_TextureLUFFY = CreatePngTexture("./Textures/LUFFY.png");
 	m_TextureRGB = CreatePngTexture("./Textures/rgb.png");
-	//m_ParticleTexture2 = CreatePngTexture("./Textures/t2.png");
+	m_TextureNumber = CreatePngTexture("./Textures/Numbers/Numbers.png");
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -91,11 +93,16 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
 
 	//DrawDrawTextureTransUV(); init
-	GenQuadsVBO_TextureTransUV(&m_VBO_TextureTransUV, &m_Count_TextureTransUV);
+	//GenQuadsVBO_TextureTransUV(&m_VBO_TextureTransUV, &m_Count_TextureTransUV);
 
-	//DrawDrawTextures(); init
-	GenQuadsVBO_Textures(&m_VBO_Textures, &m_Count_Textures);
+	//DrawTextures(); init
+	//GenQuadsVBO_Textures(&m_VBO_Textures, &m_Count_Textures);
 
+	//DrawTexturesAnimation(); init
+	//GenQuadsVBO_TexturesAnimation(&m_VBO_TexturesAnimation, &m_Count_TexturesAnimation);
+
+	//DrawNumber() || DrawNumbers(); init
+	GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2037,6 +2044,105 @@ void Renderer::GenQuadsVBO_Textures(GLuint * ID, GLuint * vCount) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+void Renderer::GenQuadsVBO_TexturesAnimation(GLuint * ID, GLuint * vCount) {
+
+	float vertPosTex[30] =
+	{
+	-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenBuffers(1, &m_VBO_TexturesAnimation);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesAnimation);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
+
+	GLulong textureSmileTotal[]
+		=
+	{
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+
+	0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+
+	0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00,
+	0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00,
+	0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+
+	0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00,
+	0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00,
+	0xFFFFFFFF, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFF0000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFF0000, 0xFFFF0000,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
+	};
+	glGenTextures(1, &gTextureIDTotal);
+	glBindTexture(GL_TEXTURE_2D, gTextureIDTotal);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 48, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureSmileTotal);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+void Renderer::GenQuadsVBO_TexturesRect(GLuint * ID, GLuint * vCount) {
+
+	float vertPosTex[30] =
+	{
+	-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenBuffers(1, &m_VBO_TexturesRect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesRect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
+}
+
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
 	// ShaderType = 여러가지
@@ -2796,4 +2902,127 @@ void Renderer::DrawTextures() {
 		glDisableVertexAttribArray(aPosID);
 		glDisableVertexAttribArray(aUVID);
 	}
+}
+
+float gTimeStamp;
+
+void Renderer::DrawTexturesAnimation() {
+	GLuint Shader = m_TexturesAnimation;
+
+	glUseProgram(Shader);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gTextureIDTotal);
+
+	int uniformTex = glGetUniformLocation(Shader, "uTexSampler");
+	glUniform1i(uniformTex, 0);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 1.f;
+	if (gTimeStamp > 5.f)
+		gTimeStamp = 0.f;
+
+	int attrribPosition = glGetAttribLocation(Shader, "Position");
+	int attrribTexPos = glGetAttribLocation(Shader, "TexPos");
+
+	glEnableVertexAttribArray(attrribPosition);
+	glEnableVertexAttribArray(attrribTexPos);
+
+	int ObjectVertex = 5;
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesAnimation);
+		glVertexAttribPointer(attrribPosition, 3, GL_FLOAT, GL_FALSE, ObjectVertex * sizeof(float), 0);
+		glVertexAttribPointer(attrribTexPos, 2, GL_FLOAT, GL_FALSE, ObjectVertex * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	}
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attrribPosition);
+	glDisableVertexAttribArray(attrribTexPos);
+}
+
+void Renderer::DrawNumber(int number) {
+	GLuint Shader = m_TexturesRect;
+
+	glUseProgram(Shader);
+
+	//uniform inputs
+	GLuint u_Num = glGetUniformLocation(Shader, "uNumber");
+	glUniform1i(u_Num, 9 - number);
+	
+	
+	//vertex Setting : vertex shader관련 내용
+	int a_Pos = glGetAttribLocation(Shader, "Position");
+	int a_TexPos = glGetAttribLocation(Shader, "TexPos");
+
+	glEnableVertexAttribArray(a_Pos);
+	glEnableVertexAttribArray(a_TexPos);
+
+	int ObjectVertex = 5;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesRect);
+
+	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	//
+	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//Restore to default
+	glDisableVertexAttribArray(a_Pos);
+	glDisableVertexAttribArray(a_TexPos);
+}
+
+void Renderer::DrawNumbers(int* number) {
+	GLuint Shader = m_TexturesRects;
+
+	glUseProgram(Shader);
+
+	//uniform inputs
+	GLuint u_Num = glGetUniformLocation(Shader, "uNumber");
+	glUniform1iv(u_Num, 3, number);
+
+
+	//vertex Setting : vertex shader관련 내용
+	int a_Pos = glGetAttribLocation(Shader, "Position");
+	int a_TexPos = glGetAttribLocation(Shader, "TexPos");
+
+	glEnableVertexAttribArray(a_Pos);
+	glEnableVertexAttribArray(a_TexPos);
+
+	int ObjectVertex = 5;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesRect);
+
+	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	//
+	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//Restore to default
+	glDisableVertexAttribArray(a_Pos);
+	glDisableVertexAttribArray(a_TexPos);
 }

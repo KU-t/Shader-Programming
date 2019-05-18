@@ -41,7 +41,11 @@ void RenderScene(void)
 	//g_Renderer->DrawTextureMapping();
 	//g_Renderer->DrawTextureMaking();
 	//g_Renderer->DrawTextureTransUV();
-	g_Renderer->DrawTextures();
+	//g_Renderer->DrawTextures();
+	//g_Renderer->DrawTexturesAnimation();
+	//g_Renderer->DrawNumber(9);
+	int number[] = { 3, 4, 5 };
+	g_Renderer->DrawNumbers(number);
 
 	glutSwapBuffers();
 }

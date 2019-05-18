@@ -195,10 +195,16 @@
     <None Include="Shaders\0417TextureMapping.vs" />
     <None Include="Shaders\0429TextureMaking.fs" />
     <None Include="Shaders\0429TextureMaking.vs" />
-    <None Include="Shaders\0501.fs" />
-    <None Include="Shaders\0501.vs" />
-    <None Include="Shaders\0508.fs" />
-    <None Include="Shaders\0508.vs" />
+    <None Include="Shaders\0501TextureTransUV.fs" />
+    <None Include="Shaders\0501TextureTransUV.vs" />
+    <None Include="Shaders\0508Textures.fs" />
+    <None Include="Shaders\0508Textures.vs" />
+    <None Include="Shaders\0513Animation.fs" />
+    <None Include="Shaders\0513Animation.vs" />
+    <None Include="Shaders\0515TextureNumber.fs" />
+    <None Include="Shaders\0515TextureNumber.vs" />
+    <None Include="Shaders\0515TextureNumbers.fs" />
+    <None Include="Shaders\0515TextureNumbers.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>

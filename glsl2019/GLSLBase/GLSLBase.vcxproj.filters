@@ -101,16 +101,34 @@
     <None Include="Shaders\0429TextureMaking.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0501.fs">
+    <None Include="Shaders\0501TextureTransUV.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0501.vs">
+    <None Include="Shaders\0501TextureTransUV.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0508.fs">
+    <None Include="Shaders\0508Textures.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0508.vs">
+    <None Include="Shaders\0508Textures.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0513Animation.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0513Animation.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0515TextureNumber.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0515TextureNumber.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0515TextureNumbers.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0515TextureNumbers.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
