@@ -131,6 +131,24 @@
     <None Include="Shaders\0515TextureNumbers.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\PracticeTextures.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\PracticeTextures.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\PracticeAnimation.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\PracticeAnimation.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

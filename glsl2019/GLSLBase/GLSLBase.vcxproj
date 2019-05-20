@@ -205,6 +205,12 @@
     <None Include="Shaders\0515TextureNumber.vs" />
     <None Include="Shaders\0515TextureNumbers.fs" />
     <None Include="Shaders\0515TextureNumbers.vs" />
+    <None Include="Shaders\0520.fs" />
+    <None Include="Shaders\0520.vs" />
+    <None Include="Shaders\PracticeAnimation.fs" />
+    <None Include="Shaders\PracticeAnimation.vs" />
+    <None Include="Shaders\PracticeTextures.fs" />
+    <None Include="Shaders\PracticeTextures.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
   </ItemGroup>

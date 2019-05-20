@@ -35,9 +35,12 @@ public:
 	void DrawTextureMaking();
 	void DrawTextureTransUV();
 	void DrawTextures();
+	void PracticeTextures();
 	void DrawTexturesAnimation();
 	void DrawNumber(int number);
 	void DrawNumbers(int* number);
+	void PracticeAnimation();
+	void Draw0520(int* number);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -61,8 +64,11 @@ private:
 	void GenQuadsVBO_TextureMaking(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TextureTransUV(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Textures(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_PracticeTextures(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TexturesAnimation(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TexturesRect(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_PracticeAnimation(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_0520(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -131,6 +137,10 @@ private:
 	GLuint m_VBO_Textures = 0;
 	GLuint m_Count_Textures = 0;
 
+	//PracticeTextures
+	GLuint m_VBO_PracticeTextures = 0;
+	GLuint m_Count_PracticeTextures = 0;
+
 	//DrawTexturesAnimation
 	GLuint m_VBO_TexturesAnimation = 0;
 	GLuint m_Count_TexturesAnimation = 0;
@@ -140,6 +150,14 @@ private:
 	GLuint m_VBO_TexturesRect = 0;
 	GLuint m_Count_TexturesRect = 0;
 	//GLuint gTextureIDTotal = 0;
+
+	//PracticeAnimation
+	GLuint m_VBO_PracticeAnimation = 0;
+	GLuint m_Count_PracticeAnimation = 0;
+
+	//Draw0520
+	GLuint m_VBO_0520 = 0;
+	GLuint m_Count_0520 = 0;
 
 	//Shaders
 	GLuint m_SolidRectShader = 0;
@@ -156,9 +174,12 @@ private:
 	GLuint m_TextureMaking = 0;
 	GLuint m_TextureTransUV = 0;
 	GLuint m_Textures = 0;
+	GLuint m_PracticeTextures = 0;
 	GLuint m_TexturesAnimation = 0;
 	GLuint m_TexturesRect = 0;
 	GLuint m_TexturesRects = 0;
+	GLuint m_PracticeAnimation = 0;
+	GLuint m_0520 = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
@@ -174,5 +195,6 @@ private:
 	GLuint m_TextureLUFFY = 0;
 	GLuint m_TextureRGB = 0;
 	GLuint m_TextureNumber = 0;
+	GLuint m_TexturePingo = 0;
 };
 

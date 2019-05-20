@@ -42,10 +42,14 @@ void RenderScene(void)
 	//g_Renderer->DrawTextureMaking();
 	//g_Renderer->DrawTextureTransUV();
 	//g_Renderer->DrawTextures();
+	//g_Renderer->PracticeTextures();
 	//g_Renderer->DrawTexturesAnimation();
 	//g_Renderer->DrawNumber(9);
-	int number[] = { 3, 4, 5 };
-	g_Renderer->DrawNumbers(number);
+	//int number[] = { 3, 4, 5 };
+	//g_Renderer->DrawNumbers(number);
+	g_Renderer->PracticeAnimation();
+	//int number[] = { 1, 4, 5 };
+	//g_Renderer->Draw0520(number);
 
 	glutSwapBuffers();
 }

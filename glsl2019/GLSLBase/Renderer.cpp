@@ -37,9 +37,12 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TextureMaking = CompileShaders("./Shaders/0429TextureMaking.vs", "./Shaders/0429TextureMaking.fs");
 	m_TextureTransUV = CompileShaders("./Shaders/0501TextureTransUV.vs", "./Shaders/0501TextureTransUV.fs");
 	m_Textures = CompileShaders("./Shaders/0508Textures.vs", "./Shaders/0508Textures.fs");
+	m_PracticeTextures = CompileShaders("./Shaders/PracticeTextures.vs", "./Shaders/PracticeTextures.fs");
 	m_TexturesAnimation = CompileShaders("./Shaders/0513Animation.vs", "./Shaders/0513Animation.fs");
 	m_TexturesRect = CompileShaders("./Shaders/0515TextureNumber.vs", "./Shaders/0515TextureNumber.fs");
 	m_TexturesRects = CompileShaders("./Shaders/0515TextureNumbers.vs", "./Shaders/0515TextureNumbers.fs");
+	m_PracticeAnimation = CompileShaders("./Shaders/PracticeAnimation.vs", "./Shaders/PracticeAnimation.fs");
+	m_0520 = CompileShaders("./Shaders/0520.vs", "./Shaders/0520.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -47,6 +50,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TextureLUFFY = CreatePngTexture("./Textures/LUFFY.png");
 	m_TextureRGB = CreatePngTexture("./Textures/rgb.png");
 	m_TextureNumber = CreatePngTexture("./Textures/Numbers/Numbers.png");
+	m_TexturePingo = CreatePngTexture("./Textures/running_man.png");
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -98,11 +102,20 @@ void Renderer::CreateVertexBufferObjects(){
 	//DrawTextures(); init
 	//GenQuadsVBO_Textures(&m_VBO_Textures, &m_Count_Textures);
 
+	//PracticeTextures(); init
+	//GenQuadsVBO_PracticeTextures(&m_VBO_PracticeTextures, &m_Count_PracticeTextures);
+
 	//DrawTexturesAnimation(); init
 	//GenQuadsVBO_TexturesAnimation(&m_VBO_TexturesAnimation, &m_Count_TexturesAnimation);
 
 	//DrawNumber() || DrawNumbers(); init
-	GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
+	//GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
+
+	//PracticeAnimation(); init
+	GenQuadsVBO_PracticeAnimation(&m_VBO_PracticeAnimation, &m_Count_PracticeAnimation);
+
+	//Draw0520 () ; init
+	//GenQuadsVBO_0520(&m_VBO_0520, &m_Count_0520);
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2044,6 +2057,23 @@ void Renderer::GenQuadsVBO_Textures(GLuint * ID, GLuint * vCount) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+void Renderer::GenQuadsVBO_PracticeTextures(GLuint * ID, GLuint * vCount) {
+
+	float vertPosTex[30] =
+	{
+	-0.5f, 1.f, 0.0f, 0.0f, 1.0f,
+	-0.5f, -1.f, 0.0f, 0.0f, 0.0f,
+	0.5f, 1.f, 0.0f, 1.0f, 1.0f,
+	0.5f, 1.f, 0.0f, 1.0f, 1.0f,
+	-0.5f, -1.f, 0.0f, 0.0f, 0.0f,
+	0.5f, -1.f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenBuffers(1, &m_VBO_PracticeTextures);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_PracticeTextures);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
+}
+
 void Renderer::GenQuadsVBO_TexturesAnimation(GLuint * ID, GLuint * vCount) {
 
 	float vertPosTex[30] =
@@ -2142,6 +2172,41 @@ void Renderer::GenQuadsVBO_TexturesRect(GLuint * ID, GLuint * vCount) {
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesRect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
 }
+
+void Renderer::GenQuadsVBO_PracticeAnimation(GLuint * ID, GLuint * vCount) {
+
+	float vertPosTex[30] =
+	{
+	-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenBuffers(1, &m_VBO_PracticeAnimation);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_PracticeAnimation);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
+}
+
+void Renderer::GenQuadsVBO_0520(GLuint * ID, GLuint * vCount) {
+
+	float vertPosTex[30] =
+	{
+	-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenBuffers(1, &m_VBO_0520);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_0520);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
+}
+
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
@@ -2846,24 +2911,6 @@ void Renderer::DrawTextures() {
 	p_time += 0.0001;
 	glUniform1f(uTimeID, p_time);
 
-	GLuint uTexID0 = glGetUniformLocation(Shader, "u_Texture0");
-	glUniform1i(uTexID0, 0);
-
-	GLuint uTexID1 = glGetUniformLocation(Shader, "u_Texture1");
-	glUniform1i(uTexID1, 1);
-
-	GLuint uTexID2 = glGetUniformLocation(Shader, "u_Texture2");
-	glUniform1i(uTexID2, 2);
-
-	GLuint uTexID3 = glGetUniformLocation(Shader, "u_Texture3");
-	glUniform1i(uTexID3, 3);
-
-	GLuint uTexID4 = glGetUniformLocation(Shader, "u_Texture4");
-	glUniform1i(uTexID4, 4);
-
-	GLuint uTexID5 = glGetUniformLocation(Shader, "u_Texture5");
-	glUniform1i(uTexID5, 5);
-	
 	//uniform
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, gTextureID0);
@@ -2883,11 +2930,27 @@ void Renderer::DrawTextures() {
 	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, gTextureID5);
 
+	GLuint uTexID0 = glGetUniformLocation(Shader, "u_Texture0");
+	glUniform1i(uTexID0, 0);
 
+	GLuint uTexID1 = glGetUniformLocation(Shader, "u_Texture1");
+	glUniform1i(uTexID1, 1);
+
+	GLuint uTexID2 = glGetUniformLocation(Shader, "u_Texture2");
+	glUniform1i(uTexID2, 2);
+
+	GLuint uTexID3 = glGetUniformLocation(Shader, "u_Texture3");
+	glUniform1i(uTexID3, 3);
+
+	GLuint uTexID4 = glGetUniformLocation(Shader, "u_Texture4");
+	glUniform1i(uTexID4, 4);
+
+	GLuint uTexID5 = glGetUniformLocation(Shader, "u_Texture5");
+	glUniform1i(uTexID5, 5);
+	
 	//attribute 사용
 	glEnableVertexAttribArray(aPosID);	// 시험에서 잘틀려
 	glEnableVertexAttribArray(aUVID);
-
 
 	int ObjectVertex = 15;
 	{
@@ -2902,6 +2965,43 @@ void Renderer::DrawTextures() {
 		glDisableVertexAttribArray(aPosID);
 		glDisableVertexAttribArray(aUVID);
 	}
+}
+
+void Renderer::PracticeTextures() {
+	GLuint Shader = m_PracticeTextures;
+
+	glUseProgram(Shader);
+
+
+	//vertex Setting : vertex shader관련 내용
+	int a_Pos = glGetAttribLocation(Shader, "a_Position");
+	int a_TexPos = glGetAttribLocation(Shader, "a_UV");
+
+	glEnableVertexAttribArray(a_Pos);
+	glEnableVertexAttribArray(a_TexPos);
+
+	int ObjectVertex = 5;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_PracticeTextures);
+
+	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "uTexSampler");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	//
+	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//Restore to default
+	glDisableVertexAttribArray(a_Pos);
+	glDisableVertexAttribArray(a_TexPos);
 }
 
 float gTimeStamp;
@@ -2921,6 +3021,7 @@ void Renderer::DrawTexturesAnimation() {
 	glUniform1f(uniformTime, gTimeStamp);
 
 	gTimeStamp += 1.f;
+	Sleep(1000);
 	if (gTimeStamp > 5.f)
 		gTimeStamp = 0.f;
 
@@ -2969,12 +3070,11 @@ void Renderer::DrawNumber(int number) {
 
 
 	//Texture Setting
-	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	GLuint uTex = glGetUniformLocation(Shader, "uTexSampler");
 	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
 	glUniform1d(uTex, 0);
 	//gltexture0번에
 	glActiveTexture(GL_TEXTURE0);
-	//
 	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
 
 	//Draw
@@ -2994,7 +3094,6 @@ void Renderer::DrawNumbers(int* number) {
 	GLuint u_Num = glGetUniformLocation(Shader, "uNumber");
 	glUniform1iv(u_Num, 3, number);
 
-
 	//vertex Setting : vertex shader관련 내용
 	int a_Pos = glGetAttribLocation(Shader, "Position");
 	int a_TexPos = glGetAttribLocation(Shader, "TexPos");
@@ -3005,6 +3104,90 @@ void Renderer::DrawNumbers(int* number) {
 	int ObjectVertex = 5;
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_TexturesRect);
+
+	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	//
+	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//Restore to default
+	glDisableVertexAttribArray(a_Pos);
+	glDisableVertexAttribArray(a_TexPos);
+}
+
+void Renderer::PracticeAnimation() {
+	GLuint Shader = m_PracticeAnimation;
+
+	glUseProgram(Shader);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 1.f;
+	Sleep(20);
+	if (gTimeStamp > 29.f)
+		gTimeStamp = 0.f;
+
+	//vertex Setting : vertex shader관련 내용
+	int a_Pos = glGetAttribLocation(Shader, "a_Position");
+	int a_TexPos = glGetAttribLocation(Shader, "a_UV");
+
+	glEnableVertexAttribArray(a_Pos);
+	glEnableVertexAttribArray(a_TexPos);
+
+	int ObjectVertex = 5;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_PracticeAnimation);
+
+	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
+	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "uTexSampler");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_TexturePingo);
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//Restore to default
+	glDisableVertexAttribArray(a_Pos);
+	glDisableVertexAttribArray(a_TexPos);
+}
+
+void Renderer::Draw0520(int* number) {
+	GLuint Shader = m_0520;
+
+	glUseProgram(Shader);
+
+	//uniform inputs
+	GLuint u_Num = glGetUniformLocation(Shader, "uNumber");
+	glUniform1iv(u_Num, 3, number);
+
+	//vertex Setting : vertex shader관련 내용
+	int a_Pos = glGetAttribLocation(Shader, "Position");
+	int a_TexPos = glGetAttribLocation(Shader, "TexPos");
+
+	glEnableVertexAttribArray(a_Pos);
+	glEnableVertexAttribArray(a_TexPos);
+
+	int ObjectVertex = 5;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_0520);
 
 	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
 	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
