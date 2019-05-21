@@ -42,7 +42,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TexturesRect = CompileShaders("./Shaders/0515TextureNumber.vs", "./Shaders/0515TextureNumber.fs");
 	m_TexturesRects = CompileShaders("./Shaders/0515TextureNumbers.vs", "./Shaders/0515TextureNumbers.fs");
 	m_PracticeAnimation = CompileShaders("./Shaders/PracticeAnimation.vs", "./Shaders/PracticeAnimation.fs");
-	m_0520 = CompileShaders("./Shaders/0520.vs", "./Shaders/0520.fs");
+	m_SpriteAnimation = CompileShaders("./Shaders/0520SpriteAnimation.vs", "./Shaders/0520SpriteAnimation.fs");
+	m_VSSandbox = CompileShaders("./Shaders/0520VSSandbox.vs", "./Shaders/0520VSSandbox.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -112,10 +113,13 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
 
 	//PracticeAnimation(); init
-	GenQuadsVBO_PracticeAnimation(&m_VBO_PracticeAnimation, &m_Count_PracticeAnimation);
+	//GenQuadsVBO_PracticeAnimation(&m_VBO_PracticeAnimation, &m_Count_PracticeAnimation);
 
-	//Draw0520 () ; init
-	//GenQuadsVBO_0520(&m_VBO_0520, &m_Count_0520);
+	//DrawSpriteAnimation () ; init
+	//GenQuadsVBO_SpriteAnimation(&m_VBO_SpriteAnimation, &m_Count_SpriteAnimation);
+
+	//DrawVSSandbox () ; init
+	GenQuadsVBO_VSSandbox(&m_VBO_VSSandbox, &m_Count_VSSandbox);
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2190,7 +2194,7 @@ void Renderer::GenQuadsVBO_PracticeAnimation(GLuint * ID, GLuint * vCount) {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
 }
 
-void Renderer::GenQuadsVBO_0520(GLuint * ID, GLuint * vCount) {
+void Renderer::GenQuadsVBO_SpriteAnimation(GLuint * ID, GLuint * vCount) {
 
 	float vertPosTex[30] =
 	{
@@ -2202,11 +2206,70 @@ void Renderer::GenQuadsVBO_0520(GLuint * ID, GLuint * vCount) {
 	0.5f, -0.5f, 0.0f, 1.0f, 0.0f
 	};
 
-	glGenBuffers(1, &m_VBO_0520);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_0520);
+	glGenBuffers(1, &m_VBO_SpriteAnimation);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SpriteAnimation);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertPosTex), vertPosTex, GL_STATIC_DRAW);
 }
 
+void Renderer::GenQuadsVBO_VSSandbox(GLuint * ID, GLuint * vCount) {
+
+	float StartPointX = -0.5f;
+	float StartPointY = -0.5f;
+	float	EndPointX = 0.5f;
+	float EndPointY = 0.5f;
+
+	int PointCountX = 32;
+	int PointCountY = 32;
+
+	float Width = EndPointX - StartPointX;
+	float Height = EndPointY - StartPointY;
+
+	float* point = new float[PointCountX * PointCountY * 2];
+	float* vertices = new float[(PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3];
+
+	for (int x = 0; x < PointCountX; x++) {
+		for (int y = 0; y < PointCountY; y++) {
+			point[(y + PointCountX * x) * 2 + 0] = StartPointX + Width * (x / (float)(PointCountX - 1));
+			point[(y + PointCountX * x) * 2 + 1] = StartPointY + Height * (y / (float)(PointCountY - 1));
+		}
+	}
+
+	int PointIndex = 0;
+
+	for (int x = 0; x < PointCountX - 1; x++) {
+		for (int y = 0; y < PointCountX - 1; y++) {
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+		}
+	}
+
+	glGenBuffers(1, &m_VBO_VSSandbox);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_VSSandbox);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
+
+	m_Count_VSSandbox = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
+}
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
@@ -3169,14 +3232,18 @@ void Renderer::PracticeAnimation() {
 	glDisableVertexAttribArray(a_TexPos);
 }
 
-void Renderer::Draw0520(int* number) {
-	GLuint Shader = m_0520;
+void Renderer::DrawSpriteAnimation(int number) {
+	GLuint Shader = m_SpriteAnimation;
 
 	glUseProgram(Shader);
 
 	//uniform inputs
 	GLuint u_Num = glGetUniformLocation(Shader, "uNumber");
-	glUniform1iv(u_Num, 3, number);
+	glUniform1f(u_Num, number);
+	GLuint u_ResolX = glGetUniformLocation(Shader, "uResolX");
+	glUniform1f(u_ResolX, (float)6);
+	GLuint u_ResolY = glGetUniformLocation(Shader, "uResolY");
+	glUniform1f(u_ResolY, (float)5);
 
 	//vertex Setting : vertex shader관련 내용
 	int a_Pos = glGetAttribLocation(Shader, "Position");
@@ -3187,20 +3254,18 @@ void Renderer::Draw0520(int* number) {
 
 	int ObjectVertex = 5;
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_0520);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SpriteAnimation);
 
 	glVertexAttribPointer(a_Pos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, 0);
 	glVertexAttribPointer(a_TexPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * ObjectVertex, (GLvoid*)(sizeof(float) * 3));
 
-
 	//Texture Setting
-	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	GLuint uTex = glGetUniformLocation(Shader, "uTexSampler");
 	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
 	glUniform1d(uTex, 0);
 	//gltexture0번에
 	glActiveTexture(GL_TEXTURE0);
-	//
-	glBindTexture(GL_TEXTURE_2D, m_TextureNumber);
+	glBindTexture(GL_TEXTURE_2D, m_TexturePingo);
 
 	//Draw
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -3208,4 +3273,27 @@ void Renderer::Draw0520(int* number) {
 	//Restore to default
 	glDisableVertexAttribArray(a_Pos);
 	glDisableVertexAttribArray(a_TexPos);
+}
+
+void Renderer::DrawVSSandbox() {
+	GLuint Shader = m_VSSandbox;
+
+	glUseProgram(m_VSSandbox);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 0.0005f;
+
+	glEnableVertexAttribArray(0);
+
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_VSSandbox);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+		glDrawArrays(GL_LINE_STRIP, 0, m_Count_VSSandbox);
+
+		glDisableVertexAttribArray(0);
+	}
 }

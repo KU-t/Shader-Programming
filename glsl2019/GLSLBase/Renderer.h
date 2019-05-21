@@ -40,7 +40,8 @@ public:
 	void DrawNumber(int number);
 	void DrawNumbers(int* number);
 	void PracticeAnimation();
-	void Draw0520(int* number);
+	void DrawSpriteAnimation(int number);
+	void DrawVSSandbox();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -68,7 +69,8 @@ private:
 	void GenQuadsVBO_TexturesAnimation(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_TexturesRect(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_PracticeAnimation(GLuint * ID, GLuint * vCount);
-	void GenQuadsVBO_0520(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_SpriteAnimation(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_VSSandbox(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -155,9 +157,13 @@ private:
 	GLuint m_VBO_PracticeAnimation = 0;
 	GLuint m_Count_PracticeAnimation = 0;
 
-	//Draw0520
-	GLuint m_VBO_0520 = 0;
-	GLuint m_Count_0520 = 0;
+	//DrawSpriteAnimation
+	GLuint m_VBO_SpriteAnimation = 0;
+	GLuint m_Count_SpriteAnimation = 0;
+
+	//DrawVSSandbox
+	GLuint m_VBO_VSSandbox = 0;
+	GLuint m_Count_VSSandbox = 0;
 
 	//Shaders
 	GLuint m_SolidRectShader = 0;
@@ -179,7 +185,8 @@ private:
 	GLuint m_TexturesRect = 0;
 	GLuint m_TexturesRects = 0;
 	GLuint m_PracticeAnimation = 0;
-	GLuint m_0520 = 0;
+	GLuint m_SpriteAnimation = 0;
+	GLuint m_VSSandbox = 0;
 
 	//Textures
 	GLuint gTextureID = 0;

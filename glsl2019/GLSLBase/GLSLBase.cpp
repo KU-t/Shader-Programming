@@ -47,9 +47,11 @@ void RenderScene(void)
 	//g_Renderer->DrawNumber(9);
 	//int number[] = { 3, 4, 5 };
 	//g_Renderer->DrawNumbers(number);
-	g_Renderer->PracticeAnimation();
-	//int number[] = { 1, 4, 5 };
-	//g_Renderer->Draw0520(number);
+	//g_Renderer->PracticeAnimation();
+	//static int gAninum = 0;
+	//gAninum = (gAninum + 1) % 3000;
+	//g_Renderer->DrawSpriteAnimation(gAninum/100);
+	g_Renderer->DrawVSSandbox();
 
 	glutSwapBuffers();
 }

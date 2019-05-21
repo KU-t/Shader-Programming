@@ -137,16 +137,22 @@
     <None Include="Shaders\PracticeTextures.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shaders\0520.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shaders\0520.vs">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="Shaders\PracticeAnimation.fs">
       <Filter>Shader</Filter>
     </None>
     <None Include="Shaders\PracticeAnimation.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520VSSandbox.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520VSSandbox.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520SpriteAnimation.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0520SpriteAnimation.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
