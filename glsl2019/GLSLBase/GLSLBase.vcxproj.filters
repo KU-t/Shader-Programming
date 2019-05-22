@@ -155,6 +155,12 @@
     <None Include="Shaders\0520SpriteAnimation.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\0522Flag.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0522Flag.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

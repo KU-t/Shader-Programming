@@ -51,7 +51,8 @@ void RenderScene(void)
 	//static int gAninum = 0;
 	//gAninum = (gAninum + 1) % 3000;
 	//g_Renderer->DrawSpriteAnimation(gAninum/100);
-	g_Renderer->DrawVSSandbox();
+	//g_Renderer->DrawVSSandbox();
+	g_Renderer->DrawFlag();
 
 	glutSwapBuffers();
 }

@@ -42,6 +42,7 @@ public:
 	void PracticeAnimation();
 	void DrawSpriteAnimation(int number);
 	void DrawVSSandbox();
+	void DrawFlag();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -71,6 +72,7 @@ private:
 	void GenQuadsVBO_PracticeAnimation(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_SpriteAnimation(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_VSSandbox(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_Flag(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -165,6 +167,10 @@ private:
 	GLuint m_VBO_VSSandbox = 0;
 	GLuint m_Count_VSSandbox = 0;
 
+	//DrawFlag
+	GLuint m_VBO_Flag = 0;
+	GLuint m_Count_Flag = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_RandQuadsShader = 0;
@@ -187,6 +193,7 @@ private:
 	GLuint m_PracticeAnimation = 0;
 	GLuint m_SpriteAnimation = 0;
 	GLuint m_VSSandbox = 0;
+	GLuint m_Flag = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
@@ -203,5 +210,6 @@ private:
 	GLuint m_TextureRGB = 0;
 	GLuint m_TextureNumber = 0;
 	GLuint m_TexturePingo = 0;
+	GLuint m_TextureKorea = 0;
 };
 
