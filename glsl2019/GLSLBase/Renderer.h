@@ -43,6 +43,7 @@ public:
 	void DrawSpriteAnimation(int number);
 	void DrawVSSandbox();
 	void DrawFlag();
+	void DrawSphereMapping();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -73,7 +74,8 @@ private:
 	void GenQuadsVBO_SpriteAnimation(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_VSSandbox(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Flag(GLuint * ID, GLuint * vCount);
-
+	void GenQuadsVBO_SphereMapping(GLuint * ID, GLuint * vCount);
+	
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
 	bool m_Initialized = false;
@@ -171,6 +173,10 @@ private:
 	GLuint m_VBO_Flag = 0;
 	GLuint m_Count_Flag = 0;
 
+	//DrawSphereMapping
+	GLuint m_VBO_SphereMapping = 0;
+	GLuint m_Count_SphereMapping = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_RandQuadsShader = 0;
@@ -194,6 +200,7 @@ private:
 	GLuint m_SpriteAnimation = 0;
 	GLuint m_VSSandbox = 0;
 	GLuint m_Flag = 0;
+	GLuint m_SphereMapping = 0;
 
 	//Textures
 	GLuint gTextureID = 0;

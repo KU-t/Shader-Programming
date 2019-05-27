@@ -211,6 +211,8 @@
     <None Include="Shaders\0520VSSandbox.vs" />
     <None Include="Shaders\0522Flag.fs" />
     <None Include="Shaders\0522Flag.vs" />
+    <None Include="Shaders\0527SphereMapping.fs" />
+    <None Include="Shaders\0527SphereMapping.vs" />
     <None Include="Shaders\PracticeAnimation.fs" />
     <None Include="Shaders\PracticeAnimation.vs" />
     <None Include="Shaders\PracticeTextures.fs" />

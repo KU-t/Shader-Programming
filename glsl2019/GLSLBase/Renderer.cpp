@@ -45,6 +45,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SpriteAnimation = CompileShaders("./Shaders/0520SpriteAnimation.vs", "./Shaders/0520SpriteAnimation.fs");
 	m_VSSandbox = CompileShaders("./Shaders/0520VSSandbox.vs", "./Shaders/0520VSSandbox.fs");
 	m_Flag = CompileShaders("./Shaders/0522Flag.vs", "./Shaders/0522Flag.fs");
+	m_SphereMapping = CompileShaders("./Shaders/0527SphereMapping.vs", "./Shaders/0527SphereMapping.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -124,7 +125,10 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_VSSandbox(&m_VBO_VSSandbox, &m_Count_VSSandbox);
 
 	//DrawFlag () ; init
-	GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
+	//GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
+
+	//DrawSphereMapping () ; init
+	GenQuadsVBO_SphereMapping(&m_VBO_SphereMapping, &m_Count_SphereMapping);
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2336,6 +2340,66 @@ void Renderer::GenQuadsVBO_Flag(GLuint * ID, GLuint * vCount) {
 	m_Count_Flag = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
 }
 
+void Renderer::GenQuadsVBO_SphereMapping(GLuint * ID, GLuint * vCount) {
+
+	float StartPointX = -0.5f;
+	float StartPointY = -0.5f;
+	float EndPointX = 0.5f;
+	float EndPointY = 0.5f;
+
+	int PointCountX = 32;
+	int PointCountY = 32;
+
+	float Width = EndPointX - StartPointX;
+	float Height = EndPointY - StartPointY;
+
+	float* point = new float[PointCountX * PointCountY * 2];
+	float* vertices = new float[(PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3];
+
+	for (int x = 0; x < PointCountX; x++) {
+		for (int y = 0; y < PointCountY; y++) {
+			point[(y + PointCountX * x) * 2 + 0] = StartPointX + Width * (x / (float)(PointCountX - 1));
+			point[(y + PointCountX * x) * 2 + 1] = StartPointY + Height * (y / (float)(PointCountY - 1));
+		}
+	}
+
+	int PointIndex = 0;
+
+	for (int x = 0; x < PointCountX - 1; x++) {
+		for (int y = 0; y < PointCountX - 1; y++) {
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+		}
+	}
+
+	glGenBuffers(1, &m_VBO_SphereMapping);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SphereMapping);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
+
+	m_Count_SphereMapping = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
+}
+
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
 	// ShaderType = 여러가지
@@ -3389,6 +3453,42 @@ void Renderer::DrawFlag() {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
 		glDrawArrays(GL_TRIANGLES, 0, m_Count_Flag);
+
+		glDisableVertexAttribArray(0);
+	}
+}
+
+void Renderer::DrawSphereMapping() {
+	GLuint Shader = m_SphereMapping;
+
+	glUseProgram(Shader);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 0.0001f;
+
+	float points[] = { 0.0, 0.0, 0.25, 0.25, -0.25, -0.25 };
+
+	int uniformPoint = glGetUniformLocation(Shader, "uPoints");
+	glUniform2fv(uniformPoint, 3, points);
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_TextureKorea);
+
+	glEnableVertexAttribArray(0);
+
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SphereMapping);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+		glDrawArrays(GL_POINTS, 0, m_Count_SphereMapping);
 
 		glDisableVertexAttribArray(0);
 	}

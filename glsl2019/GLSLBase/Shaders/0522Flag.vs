@@ -21,6 +21,7 @@ void main()
 	float periodY = 1.0 + additionalValueX * 0.5;
 
 	// sin함수 주기 (깃발 펄럭이는 속도)
+	// [-0.5 ~ 0.5] -(+0.5)-> [0 ~ 1] -(x2 * PI xxx)
 	float valueX = (2 * PI * (additionalValueY) * periodX) - uTime * 12;
 	float valueY = (2 * PI * (additionalValueX) * periodY) - uTime * 8;
 
