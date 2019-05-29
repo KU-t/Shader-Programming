@@ -53,7 +53,10 @@ void RenderScene(void)
 	//g_Renderer->DrawSpriteAnimation(gAninum/100);
 	//g_Renderer->DrawVSSandbox();
 	//g_Renderer->DrawFlag();
-	g_Renderer->DrawSphereMapping();
+	//g_Renderer->DrawSphereMapping();
+	//g_Renderer->DrawSimpleCube();
+	g_Renderer->DrawFlag_Camera();
+
 
 	glutSwapBuffers();
 }

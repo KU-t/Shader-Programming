@@ -46,6 +46,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_VSSandbox = CompileShaders("./Shaders/0520VSSandbox.vs", "./Shaders/0520VSSandbox.fs");
 	m_Flag = CompileShaders("./Shaders/0522Flag.vs", "./Shaders/0522Flag.fs");
 	m_SphereMapping = CompileShaders("./Shaders/0527SphereMapping.vs", "./Shaders/0527SphereMapping.fs");
+	m_SimpleCube = CompileShaders("./Shaders/0529SimpleCube.vs", "./Shaders/0529SimpleCube.fs");
+	m_Flag_Camera = CompileShaders("./Shaders/0529Flag_Camera.vs", "./Shaders/0529Flag_Camera.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -128,7 +130,14 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
 
 	//DrawSphereMapping () ; init
-	GenQuadsVBO_SphereMapping(&m_VBO_SphereMapping, &m_Count_SphereMapping);
+	//GenQuadsVBO_SphereMapping(&m_VBO_SphereMapping, &m_Count_SphereMapping);
+	
+	//DrawSimpleCube () ; init
+	//GenQuadsVBO_SimpleCube(&m_VBO_SimpleCube, &m_Count_SimpleCube);
+
+	//DrawFlag_Camera () ; init
+	GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
+	
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2400,6 +2409,93 @@ void Renderer::GenQuadsVBO_SphereMapping(GLuint * ID, GLuint * vCount) {
 	m_Count_SphereMapping = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
 }
 
+void Renderer::GenQuadsVBO_SimpleCube(GLuint * ID, GLuint * vCount) {
+
+	float temp = 0.5f;
+
+	float cube[] = {
+	-temp,-temp,-temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, //x, y, z, nx, ny, nz, r, g, b, a
+	-temp,-temp, temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	-temp, temp, temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+
+	temp, temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+	-temp,-temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+	-temp, temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+
+	temp,-temp, temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp,-temp,-temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	temp,-temp,-temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+
+	temp, temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+	temp,-temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+	-temp,-temp,-temp, 0.f, 0.f, -1.f, 0.f, 0.f, 1.f, 1.f,
+
+	-temp,-temp,-temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	-temp, temp, temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	-temp, temp,-temp, -1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+
+	temp,-temp, temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp,-temp, temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp,-temp,-temp, 0.f, -1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+
+	-temp, temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+	-temp,-temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+	temp,-temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+
+	temp, temp, temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	temp,-temp,-temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	temp, temp,-temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+
+	temp,-temp,-temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	temp, temp, temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+	temp,-temp, temp, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
+
+	temp, temp, temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	temp, temp,-temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp, temp,-temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+
+	temp, temp, temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp, temp,-temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+	-temp, temp, temp, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f,
+
+	temp, temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+	-temp, temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+	temp,-temp, temp, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f, 1.f,
+	};
+
+	glGenBuffers(1, &m_VBO_SimpleCube);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SimpleCube);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+}
+
+void Renderer::InitMatrices() {
+	
+	// 직교 투영 (left, right, bottom, top, near, far)
+	m_OrthoProjMat4 = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 2.f);
+
+	// 카메라 투영
+	m_v3CameraPos = glm::vec3(1.f, 1.f, 1.f);
+	m_v3CameraLookat = glm::vec3(0.f, 0.f, 0.f);
+	m_v3CameraUp = glm::vec3(0.f, 1.f, 0.f);
+	m_ViewMat4 = glm::lookAt(m_v3CameraPos, m_v3CameraLookat, m_v3CameraUp);
+
+	m_ViewProjMat4 = m_OrthoProjMat4 * m_ViewMat4;
+}
+
+void Renderer::InitMatrices(float posx, float posy, float posz, float lookx, float looky, float lookz, float upx, float upy, float upz) {
+
+	// 직교 투영 (left, right, bottom, top, near, far)
+	m_OrthoProjMat4 = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 2.f);
+
+	// 카메라 투영
+	m_v3CameraPos = glm::vec3(posx, posy, posz);
+	m_v3CameraLookat = glm::vec3(lookx, looky, lookz);
+	m_v3CameraUp = glm::vec3(upx, upy, upz);
+	m_ViewMat4 = glm::lookAt(m_v3CameraPos, m_v3CameraLookat, m_v3CameraUp);
+
+	m_ViewProjMat4 = m_OrthoProjMat4 * m_ViewMat4;
+}
+
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
 
 	// ShaderType = 여러가지
@@ -3489,6 +3585,79 @@ void Renderer::DrawSphereMapping() {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
 		glDrawArrays(GL_POINTS, 0, m_Count_SphereMapping);
+
+		glDisableVertexAttribArray(0);
+	}
+}
+
+void Renderer::DrawSimpleCube() {
+
+	InitMatrices();
+
+	GLuint Shader = m_SimpleCube;
+
+	glUseProgram(Shader);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	GLuint projView = glGetUniformLocation(Shader, "u_ProjView");
+
+	glUniformMatrix4fv(projView, 1, GL_FALSE, &m_ViewProjMat4[0][0]);
+
+	int attribPosition = glGetAttribLocation(Shader, "a_Position");
+	int attribNormal = glGetAttribLocation(Shader, "a_Normal");
+	int attribColor = glGetAttribLocation(Shader, "a_Color");
+
+	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(attribNormal);
+	glEnableVertexAttribArray(attribColor);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_SimpleCube);
+
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 10, 0);
+	glVertexAttribPointer(attribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (GLvoid*)(sizeof(float) * 3));
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (GLvoid*)(sizeof(float) * 6));
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	glDisableVertexAttribArray(attribPosition);
+	glDisableVertexAttribArray(attribNormal);
+	glDisableVertexAttribArray(attribColor);
+}
+
+void Renderer::DrawFlag_Camera() {
+
+	InitMatrices(0,0,1.3,0,0,0,0,1,0);
+
+	GLuint Shader = m_Flag_Camera;
+
+	glUseProgram(Shader);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 0.0005f;
+
+	//Texture Setting
+	GLuint uTex = glGetUniformLocation(Shader, "u_Texture");
+	//여러장의 텍스쳐중에 0번째 슬롯을 쓰겠다.
+	glUniform1d(uTex, 0);
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_TextureKorea);
+
+	GLuint projView = glGetUniformLocation(Shader, "u_ProjView");
+	glUniformMatrix4fv(projView, 1, GL_FALSE, &m_ViewProjMat4[0][0]);
+
+	glEnableVertexAttribArray(0);
+
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Flag);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_Flag);
 
 		glDisableVertexAttribArray(0);
 	}

@@ -44,6 +44,11 @@ public:
 	void DrawVSSandbox();
 	void DrawFlag();
 	void DrawSphereMapping();
+	void DrawSimpleCube();
+	void DrawFlag_Camera();
+
+	void InitMatrices();
+	void InitMatrices(float, float, float, float, float, float, float, float, float);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -75,6 +80,7 @@ private:
 	void GenQuadsVBO_VSSandbox(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Flag(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_SphereMapping(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_SimpleCube(GLuint * ID, GLuint * vCount);
 	
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -177,6 +183,17 @@ private:
 	GLuint m_VBO_SphereMapping = 0;
 	GLuint m_Count_SphereMapping = 0;
 
+	//DrawSimpleCube
+	//Matrices
+	glm::mat4 m_ViewMat4;
+	glm::mat4 m_OrthoProjMat4;
+	glm::mat4 m_ViewProjMat4;
+	glm::vec3 m_v3CameraPos;
+	glm::vec3 m_v3CameraLookat;
+	glm::vec3 m_v3CameraUp;
+	GLuint m_VBO_SimpleCube = 0;
+	GLuint m_Count_SimpleCube = 0;
+
 	//Shaders
 	GLuint m_SolidRectShader = 0;
 	GLuint m_RandQuadsShader = 0;
@@ -201,6 +218,8 @@ private:
 	GLuint m_VSSandbox = 0;
 	GLuint m_Flag = 0;
 	GLuint m_SphereMapping = 0;
+	GLuint m_SimpleCube = 0;
+	GLuint m_Flag_Camera = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
