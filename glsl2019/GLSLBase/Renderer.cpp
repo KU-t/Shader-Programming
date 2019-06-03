@@ -48,6 +48,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SphereMapping = CompileShaders("./Shaders/0527SphereMapping.vs", "./Shaders/0527SphereMapping.fs");
 	m_SimpleCube = CompileShaders("./Shaders/0529SimpleCube.vs", "./Shaders/0529SimpleCube.fs");
 	m_Flag_Camera = CompileShaders("./Shaders/0529Flag_Camera.vs", "./Shaders/0529Flag_Camera.fs");
+	m_Heightmap = CompileShaders("./Shaders/0603Heightmap.vs", "./Shaders/0603Heightmap.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -57,6 +58,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TextureNumber = CreatePngTexture("./Textures/Numbers/Numbers.png");
 	m_TexturePingo = CreatePngTexture("./Textures/running_man.png");
 	m_TextureKorea = CreatePngTexture("./Textures/korea.png");
+	m_TextureHeightmap = CreatePngTexture("./Textures/mountain.png");
+	m_TextureSnow = CreatePngTexture("./Textures/snow.png");
+	m_TextureGrass = CreatePngTexture("./Textures/grass.png");
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -136,7 +140,10 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_SimpleCube(&m_VBO_SimpleCube, &m_Count_SimpleCube);
 
 	//DrawFlag_Camera () ; init
-	GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
+	//GenQuadsVBO_Flag_Camera(&m_VBO_Flag_Camera, &m_Count_Flag_Camera);
+
+	//DrawHeightmap () ; init
+	GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
 	
 }
 
@@ -2468,7 +2475,127 @@ void Renderer::GenQuadsVBO_SimpleCube(GLuint * ID, GLuint * vCount) {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 }
 
-void Renderer::InitMatrices() {
+void Renderer::GenQuadsVBO_Flag_Camera(GLuint * ID, GLuint * vCount) {
+
+	float StartPointX = -0.5f;
+	float StartPointY = -0.5f;
+	float EndPointX = 0.5f;
+	float EndPointY = 0.5f;
+
+	int PointCountX = 32;
+	int PointCountY = 32;
+
+	float Width = EndPointX - StartPointX;
+	float Height = EndPointY - StartPointY;
+
+	float* point = new float[PointCountX * PointCountY * 2];
+	float* vertices = new float[(PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3];
+
+	for (int x = 0; x < PointCountX; x++) {
+		for (int y = 0; y < PointCountY; y++) {
+			point[(y + PointCountX * x) * 2 + 0] = StartPointX + Width * (x / (float)(PointCountX - 1));
+			point[(y + PointCountX * x) * 2 + 1] = StartPointY + Height * (y / (float)(PointCountY - 1));
+		}
+	}
+
+	int PointIndex = 0;
+
+	for (int x = 0; x < PointCountX - 1; x++) {
+		for (int y = 0; y < PointCountX - 1; y++) {
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+		}
+	}
+
+	glGenBuffers(1, &m_VBO_Flag_Camera);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Flag_Camera);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
+
+	m_Count_Flag_Camera = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
+}
+
+void Renderer::GenQuadsVBO_Heightmap(GLuint * ID, GLuint * vCount) {
+
+	float StartPointX = -0.5f;
+	float StartPointY = -0.5f;
+	float EndPointX = 0.5f;
+	float EndPointY = 0.5f;
+
+	int PointCountX = 64;
+	int PointCountY = 64;
+
+	float Width = EndPointX - StartPointX;
+	float Height = EndPointY - StartPointY;
+
+	float* point = new float[PointCountX * PointCountY * 2];
+	float* vertices = new float[(PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3];
+
+	for (int x = 0; x < PointCountX; x++) {
+		for (int y = 0; y < PointCountY; y++) {
+			point[(y + PointCountX * x) * 2 + 0] = StartPointX + Width * (x / (float)(PointCountX - 1));
+			point[(y + PointCountX * x) * 2 + 1] = StartPointY + Height * (y / (float)(PointCountY - 1));
+		}
+	}
+
+	int PointIndex = 0;
+
+	for (int x = 0; x < PointCountX - 1; x++) {
+		for (int y = 0; y < PointCountX - 1; y++) {
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * x) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[(y + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 0];
+			vertices[PointIndex++] = point[((y + 1) + PointCountX * (x + 1)) * 2 + 1];
+			vertices[PointIndex++] = 0.f;
+		}
+	}
+
+	glGenBuffers(1, &m_VBO_Heightmap);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Heightmap);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (PointCountX - 1)*(PointCountY - 1) * 2 * 3 * 3, vertices, GL_STATIC_DRAW);
+
+	m_Count_Heightmap = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
+}
+
+void Renderer::InitOrthoMatrices() {
 	
 	// 직교 투영 (left, right, bottom, top, near, far)
 	m_OrthoProjMat4 = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 2.f);
@@ -2482,7 +2609,7 @@ void Renderer::InitMatrices() {
 	m_ViewProjMat4 = m_OrthoProjMat4 * m_ViewMat4;
 }
 
-void Renderer::InitMatrices(float posx, float posy, float posz, float lookx, float looky, float lookz, float upx, float upy, float upz) {
+void Renderer::InitOrthoMatrices(float posx, float posy, float posz, float lookx, float looky, float lookz, float upx, float upy, float upz) {
 
 	// 직교 투영 (left, right, bottom, top, near, far)
 	m_OrthoProjMat4 = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 2.f);
@@ -2494,6 +2621,34 @@ void Renderer::InitMatrices(float posx, float posy, float posz, float lookx, flo
 	m_ViewMat4 = glm::lookAt(m_v3CameraPos, m_v3CameraLookat, m_v3CameraUp);
 
 	m_ViewProjMat4 = m_OrthoProjMat4 * m_ViewMat4;
+}
+
+void Renderer::InitPerspectMatrices() {
+
+	// 원근 투영 (left, right, bottom, top, near, far)
+	m_PersProjMat4 = glm::perspective(3.141592f * 0.5f, 1.f, 0.001f, 100.f);
+
+	// 카메라 투영
+	m_v3CameraPos = glm::vec3(0.f, 0.f, 1.f);
+	m_v3CameraLookat = glm::vec3(0.f, 0.f, 0.f);
+	m_v3CameraUp = glm::vec3(0.f, 1.f, 0.f);
+	m_ViewMat4 = glm::lookAt(m_v3CameraPos, m_v3CameraLookat, m_v3CameraUp);
+
+	m_ViewProjMat4 = m_PersProjMat4 * m_ViewMat4;
+}
+
+void Renderer::InitPerspectMatrices(float posx, float posy, float posz, float lookx, float looky, float lookz, float upx, float upy, float upz) {
+
+	// 원근 투영 (left, right, bottom, top, near, far)
+	m_PersProjMat4 = glm::perspective(3.141592f * 0.5f, 1.f, 0.001f, 100.f);
+
+	// 카메라 투영
+	m_v3CameraPos = glm::vec3(posx, posy, posz);
+	m_v3CameraLookat = glm::vec3(lookx, looky, lookz);
+	m_v3CameraUp = glm::vec3(upx, upy, upz);
+	m_ViewMat4 = glm::lookAt(m_v3CameraPos, m_v3CameraLookat, m_v3CameraUp);
+
+	m_ViewProjMat4 = m_PersProjMat4 * m_ViewMat4;
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType){
@@ -3592,7 +3747,7 @@ void Renderer::DrawSphereMapping() {
 
 void Renderer::DrawSimpleCube() {
 
-	InitMatrices();
+	InitOrthoMatrices();
 
 	GLuint Shader = m_SimpleCube;
 
@@ -3628,7 +3783,7 @@ void Renderer::DrawSimpleCube() {
 
 void Renderer::DrawFlag_Camera() {
 
-	InitMatrices(0,0,1.3,0,0,0,0,1,0);
+	InitOrthoMatrices(0,0,1.3,0,0,0,0,1,0);
 
 	GLuint Shader = m_Flag_Camera;
 
@@ -3653,11 +3808,67 @@ void Renderer::DrawFlag_Camera() {
 	glEnableVertexAttribArray(0);
 
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Flag);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Flag_Camera);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-		glDrawArrays(GL_TRIANGLES, 0, m_Count_Flag);
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_Flag_Camera);
+
+		glDisableVertexAttribArray(0);
+	}
+}
+
+void Renderer::DrawHeightmap() {
+
+	InitPerspectMatrices(0.f, -0.7f, 0.5f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+
+	GLuint Shader = m_Heightmap;
+
+	glUseProgram(Shader);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	int uniformTime = glGetUniformLocation(Shader, "uTime");
+	glUniform1f(uniformTime, gTimeStamp);
+
+	gTimeStamp += 0.0005f;
+
+
+	//Texture Setting
+	GLuint uSnow = glGetUniformLocation(Shader, "u_TextureSnow");
+	glUniform1i(uSnow, 0);
+	
+	GLuint uGrass = glGetUniformLocation(Shader, "u_TextureSGrass");
+	glUniform1i(uGrass, 1);
+
+	GLuint uHeight = glGetUniformLocation(Shader, "u_TextureHeight");
+	glUniform1i(uHeight, 2);
+
+
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_TextureSnow);
+
+	//gltexture0번에
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_TextureGrass);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_TextureHeightmap);
+
+
+	GLuint projView = glGetUniformLocation(Shader, "u_ProjView");
+	glUniformMatrix4fv(projView, 1, GL_FALSE, &m_ViewProjMat4[0][0]);
+
+	glEnableVertexAttribArray(0);
+
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Heightmap);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+		glDrawArrays(GL_TRIANGLES, 0, m_Count_Heightmap);
 
 		glDisableVertexAttribArray(0);
 	}

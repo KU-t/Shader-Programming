@@ -179,6 +179,12 @@
     <None Include="Shaders\0529Flag_Camera.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shaders\0603Heightmap.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\0603Heightmap.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

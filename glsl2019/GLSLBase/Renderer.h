@@ -46,9 +46,12 @@ public:
 	void DrawSphereMapping();
 	void DrawSimpleCube();
 	void DrawFlag_Camera();
+	void DrawHeightmap();
 
-	void InitMatrices();
-	void InitMatrices(float, float, float, float, float, float, float, float, float);
+	void InitOrthoMatrices();
+	void InitOrthoMatrices(float, float, float, float, float, float, float, float, float);
+	void InitPerspectMatrices();
+	void InitPerspectMatrices(float, float, float, float, float, float, float, float, float);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -81,7 +84,9 @@ private:
 	void GenQuadsVBO_Flag(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_SphereMapping(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_SimpleCube(GLuint * ID, GLuint * vCount);
-	
+	void GenQuadsVBO_Flag_Camera(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_Heightmap(GLuint * ID, GLuint * vCount);
+
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
 	bool m_Initialized = false;
@@ -184,15 +189,25 @@ private:
 	GLuint m_Count_SphereMapping = 0;
 
 	//DrawSimpleCube
+	GLuint m_VBO_SimpleCube = 0;
+	GLuint m_Count_SimpleCube = 0;
+	GLuint m_VBO_Flag_Camera = 0;
+	GLuint m_Count_Flag_Camera = 0;
+
+	//DrawHeightmap
+	GLuint m_VBO_Heightmap = 0;
+	GLuint m_Count_Heightmap = 0;
+
+
 	//Matrices
 	glm::mat4 m_ViewMat4;
 	glm::mat4 m_OrthoProjMat4;
+	glm::mat4 m_PersProjMat4;
 	glm::mat4 m_ViewProjMat4;
 	glm::vec3 m_v3CameraPos;
 	glm::vec3 m_v3CameraLookat;
 	glm::vec3 m_v3CameraUp;
-	GLuint m_VBO_SimpleCube = 0;
-	GLuint m_Count_SimpleCube = 0;
+
 
 	//Shaders
 	GLuint m_SolidRectShader = 0;
@@ -220,6 +235,7 @@ private:
 	GLuint m_SphereMapping = 0;
 	GLuint m_SimpleCube = 0;
 	GLuint m_Flag_Camera = 0;
+	GLuint m_Heightmap = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
@@ -237,5 +253,9 @@ private:
 	GLuint m_TextureNumber = 0;
 	GLuint m_TexturePingo = 0;
 	GLuint m_TextureKorea = 0;
+	GLuint m_TextureHeightmap = 0;
+	GLuint m_TextureSnow = 0;
+	GLuint m_TextureGrass = 0;
+	
 };
 
