@@ -56,7 +56,8 @@ void RenderScene(void)
 	//g_Renderer->DrawSphereMapping();
 	//g_Renderer->DrawSimpleCube();
 	//g_Renderer->DrawFlag_Camera();
-	g_Renderer->DrawHeightmap();
+	//g_Renderer->DrawHeightmap();
+	g_Renderer->DrawNormalVector();
 
 	glutSwapBuffers();
 }

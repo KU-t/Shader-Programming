@@ -47,11 +47,14 @@ public:
 	void DrawSimpleCube();
 	void DrawFlag_Camera();
 	void DrawHeightmap();
+	void DrawNormalVector();
+
 
 	void InitOrthoMatrices();
 	void InitOrthoMatrices(float, float, float, float, float, float, float, float, float);
 	void InitPerspectMatrices();
 	void InitPerspectMatrices(float, float, float, float, float, float, float, float, float);
+	void InitPerspectMatrices(glm::vec3,glm::vec3,glm::vec3);
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -86,6 +89,7 @@ private:
 	void GenQuadsVBO_SimpleCube(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Flag_Camera(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Heightmap(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_NormalVector(GLuint * ID, GLuint * vCount);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -198,6 +202,10 @@ private:
 	GLuint m_VBO_Heightmap = 0;
 	GLuint m_Count_Heightmap = 0;
 
+	//DrawNormalVector
+	GLuint m_VBO_NormalVector = 0;
+	GLuint m_Count_NormalVector = 0;
+
 
 	//Matrices
 	glm::mat4 m_ViewMat4;
@@ -207,7 +215,6 @@ private:
 	glm::vec3 m_v3CameraPos;
 	glm::vec3 m_v3CameraLookat;
 	glm::vec3 m_v3CameraUp;
-
 
 	//Shaders
 	GLuint m_SolidRectShader = 0;
@@ -236,6 +243,7 @@ private:
 	GLuint m_SimpleCube = 0;
 	GLuint m_Flag_Camera = 0;
 	GLuint m_Heightmap = 0;
+	GLuint m_NormalVector = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
