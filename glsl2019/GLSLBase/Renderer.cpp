@@ -50,6 +50,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_Flag_Camera = CompileShaders("./Shaders/0529Flag_Camera.vs", "./Shaders/0529Flag_Camera.fs");
 	m_Heightmap = CompileShaders("./Shaders/0603Heightmap.vs", "./Shaders/0603Heightmap.fs");
 	m_NormalVector = CompileShaders("./Shaders/0605NormalVector.vs", "./Shaders/0605NormalVector.fs");
+	m_FrameBuffer = CompileShaders("./Shaders/0610FrameBuffer.vs", "./Shaders/0610FrameBuffer.fs");
 
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
@@ -65,6 +66,13 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Create VBOs
 	CreateVertexBufferObjects();
+
+	//Create FBOs
+	m_FBO0 = CreateFBO(512, 512, &m_FBOTexture0);
+	m_FBO1 = CreateFBO(512, 512, &m_FBOTexture1);
+	m_FBO2 = CreateFBO(512, 512, &m_FBOTexture2);
+	m_FBO3 = CreateFBO(512, 512, &m_FBOTexture3);
+
 }
 
 void Renderer::CreateVertexBufferObjects(){
@@ -84,7 +92,7 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_Vel(1000);
 
 	//DrawGravity(); init
-	//GenQuadsVBO_Gra(1000);
+	//GenQuadsVBO_Gra(1000, &m_VBOGravity, &m_VBOGravity_VertexCount);
 
 	//DrawSinGraph(); init
 	//GenQuadsVBO_Sin(1000, false, &m_VBO_SinGraph, &m_Count_SinGraph);
@@ -147,7 +155,10 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
 	
 	//DrawNormalVector () ; init
-	GenQuadsVBO_NormalVector(&m_VBO_NormalVector, &m_Count_NormalVector);
+	//GenQuadsVBO_NormalVector(&m_VBO_NormalVector, &m_Count_NormalVector);
+
+	//DrawFrameBuffer () ; init
+	GenQuadsVBO_FrameBuffer();
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -417,7 +428,7 @@ void Renderer::GenQuadsVBO_Vel(int count)
 	m_VBOSimpleVel_VertexCount = 6 * count;
 }
 
-void Renderer::GenQuadsVBO_Gra(int count) {
+void Renderer::GenQuadsVBO_Gra(int count, GLuint * id, GLuint * vCount) {
 	int verticesPerQuad = 6;	// 사각형에 몇개의 vertex
 	int floatsPervertex = 3 + 3 + 2;	// xyz, velx, vely, velz, lifetime, starttime
 	int countQuad = count;	// 몇개의 쿼드
@@ -529,12 +540,14 @@ void Renderer::GenQuadsVBO_Gra(int count) {
 			//vertices[index] = (float)i;	index++;
 		}
 	}
+	GLuint vboID = 0;
 
-	glGenBuffers(1, &m_VBOGravity);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOGravity);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * arraySize, vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*arraySize, vertices, GL_STATIC_DRAW);
 
-	m_VBOGravity_VertexCount = 6 * count;
+	*vCount = verticesPerQuad * count;
+	*id = vboID;
 }
 
 void Renderer::GenQuadsVBO_Sin(int count,bool random, GLuint* ID,GLuint* vCount) {
@@ -2658,6 +2671,54 @@ void Renderer::GenQuadsVBO_NormalVector(GLuint * ID, GLuint * vCount) {
 	*vCount = (PointCountX - 1)*(PointCountY - 1) * 2 * 3;
 }
 
+void Renderer::GenQuadsVBO_FrameBuffer() {
+
+	float size = 1.f;
+	float rect[]
+		=
+	{
+		-size, -size, 0.f, 0.5f, 0.f, 0.f,//x, y, z, value, u, v
+		-size, size, 0.f, 0.5f, 0.f, 1.f,
+		size, size, 0.f, 0.5f, 1.f, 1.f, //Triangle1
+		-size, -size, 0.f, 0.5f, 0.f, 0.f,
+		size, size, 0.f, 0.5f, 1.f, 1.f,
+		size, -size, 0.f, 0.5f, 1.f, 0.f //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBO_Buffer_Rect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_Rect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	size = 0.5f;
+	float texRect[]
+		=
+	{
+		-size, -size, 0.f, 0.f, 0.f, //x, y, z, u, v
+		-size, size, 0.f, 0.f, 1.f,
+		size, size, 0.f, 1.f, 1.f, //Triangle1
+		-size, -size, 0.f, 0.f, 0.f,
+		size, size, 0.f, 1.f, 1.f,
+		size, -size, 0.f, 1.f, 0.f //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBO_Buffer_TextRect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_TextRect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texRect), texRect, GL_STATIC_DRAW);
+
+	//DrawVSSandbox () ; init
+	GenQuadsVBO_VSSandbox(&m_VBO_VSSandbox, &m_Count_VSSandbox);
+	
+	//DrawGravity(); init
+	GenQuadsVBO_Gra(1000, &m_VBOGravity, &m_VBOGravity_VertexCount);
+	
+	//DrawRadar(); init
+	GenQuadsVBO_Radar(&m_VBO_Radar, &m_Count_Radar);
+	
+	//DrawSpriteAnimation () ; init
+	GenQuadsVBO_SpriteAnimation(&m_VBO_SpriteAnimation, &m_Count_SpriteAnimation);
+	
+}
+
 void Renderer::InitOrthoMatrices() {
 	
 	// 직교 투영 (left, right, bottom, top, near, far)
@@ -4014,4 +4075,191 @@ void Renderer::DrawNormalVector() {
 
 		glDisableVertexAttribArray(0);
 	}
+}
+
+void Renderer::DrawFrameBuffer() {
+
+	//glm::vec3 camerapos = glm::vec3(0.f, -0.7f, 0.5f);
+	//glm::vec3 cameralook = glm::vec3(0.f, 0.f, 0.f);
+	//glm::vec3 cameraup = glm::vec3(0.f, 0.f, 1.f);
+
+	//InitPerspectMatrices(camerapos, cameralook, cameraup);
+
+	//GLuint Shader = m_FrameBuffer;
+
+	//glUseProgram(Shader);
+
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LEQUAL);
+
+	//float campos[] = { camerapos.x,camerapos.y,camerapos.z };
+
+	//int uniformCameraPosID = glGetUniformLocation(Shader, "u_CameraPos");
+	//glUniform3fv(uniformCameraPosID, 1, campos);
+
+	//int uniformTime = glGetUniformLocation(Shader, "uTime");
+	//glUniform1f(uniformTime, gTimeStamp);
+
+	//gTimeStamp += 0.0005f;
+
+
+	////Texture Setting
+	//GLuint uSnow = glGetUniformLocation(Shader, "u_TextureSnow");
+	//glUniform1i(uSnow, 0);
+
+	//GLuint uGrass = glGetUniformLocation(Shader, "u_TextureSGrass");
+	//glUniform1i(uGrass, 1);
+
+	//GLuint uHeight = glGetUniformLocation(Shader, "u_TextureHeight");
+	//glUniform1i(uHeight, 2);
+
+
+	////gltexture0번에
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, m_TextureSnow);
+
+	////gltexture0번에
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, m_TextureGrass);
+
+	//glActiveTexture(GL_TEXTURE2);
+	//glBindTexture(GL_TEXTURE_2D, m_TextureHeightmap);
+
+	//
+
+	//GLuint projView = glGetUniformLocation(Shader, "u_ProjView");
+	//glUniformMatrix4fv(projView, 1, GL_FALSE, &m_ViewProjMat4[0][0]);
+
+	//glEnableVertexAttribArray(0);
+
+	//{
+	//	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_FrameBuffer);
+
+	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	//	glDrawArrays(GL_TRIANGLES, 0, m_Count_FrameBuffer);
+
+	//	glDisableVertexAttribArray(0);
+	//}
+}
+
+GLuint Renderer::CreateFBO(int sx, int sy, GLuint* tex) {
+
+	// render target
+	GLuint tempTex = 0;
+	glGenTextures(1, &tempTex);
+	glBindTexture(GL_TEXTURE_2D, tempTex);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, sx, sy, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	*tex = tempTex;
+
+	// Gen Depth Buffer
+	glGenRenderbuffers(1, &m_DepthRenderBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_DepthRenderBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, sx, sy);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	GLuint tempFBO;
+	glGenFramebuffers(1, &tempFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, tempFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tempTex, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthRenderBuffer);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "Error while attach fbo. \n";
+		return 0;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return tempFBO;
+}
+
+void Renderer::DrawRenderFBO() {
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(1.f);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawVSSandbox();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(1.f);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawGravity();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO2);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(1.f);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawRadar();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO3);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(1.f);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	static int gAnimNum = 0;
+	gAnimNum++;
+	if (gAnimNum > 30)
+		gAnimNum = 0;
+	DrawSpriteAnimation(gAnimNum);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glViewport(0, 0, 1024, 1024);
+
+
+	DrawTextureRect(m_FBOTexture0, -0.5, -0.5, 1, 1);
+	DrawTextureRect(m_FBOTexture1, 0.5, -0.5, 1, 1);
+	DrawTextureRect(m_FBOTexture2, -0.5, 0.5, 1, 1);
+	DrawTextureRect(m_FBOTexture3, 0.5, 0.5, 1, 1);
+}
+
+void Renderer::DrawTextureRect(GLuint tex, float x, float y, float sx, float sy){
+	
+	GLuint shader = m_FrameBuffer;
+
+	glUseProgram(shader);
+
+	GLuint uTime = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uTime, p_time);
+	p_time += 0.01;
+	GLuint uTexture = glGetUniformLocation(shader, "u_Texture");
+	glUniform1i(uTexture, 0);
+	GLuint uPos = glGetUniformLocation(shader, "u_Pos");
+	GLuint uSize = glGetUniformLocation(shader, "u_Size");
+	glUniform2f(uPos, x, y);
+	glUniform2f(uSize, sx, sy);
+
+	//BindNumberTextures();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	GLuint aPos = glGetAttribLocation(shader, "a_Position");
+	GLuint aTex = glGetAttribLocation(shader, "a_Tex");
+
+	glEnableVertexAttribArray(aPos);
+	glEnableVertexAttribArray(aTex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_TextRect);
+
+	glVertexAttribPointer(aPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(aPos);
+	glDisableVertexAttribArray(aTex);
 }

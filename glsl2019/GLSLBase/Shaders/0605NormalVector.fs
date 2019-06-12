@@ -61,5 +61,8 @@ void main()
 
 	vec3 newColor = ambientcolor * a + diffusecolor * diffuse * d + speccolor * spec * s;
 
+	vec4 outColor = vec4(newColor.x * finalColor.x, newColor.y * finalColor.y,
+	newColor.z * finalColor.z, finalColor.x );
+
 	FragColor = vec4(newColor, 1);
 }

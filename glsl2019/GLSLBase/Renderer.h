@@ -48,7 +48,8 @@ public:
 	void DrawFlag_Camera();
 	void DrawHeightmap();
 	void DrawNormalVector();
-
+	void DrawFrameBuffer();
+	void DrawRenderFBO();
 
 	void InitOrthoMatrices();
 	void InitOrthoMatrices(float, float, float, float, float, float, float, float, float);
@@ -68,7 +69,7 @@ private:
 	void GenQuadsVBO_Rand(int count);
 	void GenQuadsVBO_GridMesh();
 	void GenQuadsVBO_Vel(int count);
-	void GenQuadsVBO_Gra(int count);
+	void GenQuadsVBO_Gra(int count, GLuint * id, GLuint * vCount);
 	void GenQuadsVBO_Sin(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_DirectionSin(int count, bool random, GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_FragmentBase(int count, bool random, GLuint * ID, GLuint * vCount);
@@ -90,6 +91,10 @@ private:
 	void GenQuadsVBO_Flag_Camera(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_Heightmap(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_NormalVector(GLuint * ID, GLuint * vCount);
+	void GenQuadsVBO_FrameBuffer();
+	
+	GLuint Renderer::CreateFBO(int sx, int sy, GLuint* tex);
+	void DrawTextureRect(GLuint tex, float x, float y, float sx, float sy);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -206,6 +211,19 @@ private:
 	GLuint m_VBO_NormalVector = 0;
 	GLuint m_Count_NormalVector = 0;
 
+	//DrawFrameBuffer
+	GLuint m_VBO_Buffer_Rect = 0;
+	GLuint m_VBO_Buffer_TextRect = 0;
+
+	//	FrameBufferObj
+	GLuint m_FBO0 = 0;
+	GLuint m_FBO1 = 0;
+	GLuint m_FBO2 = 0;
+	GLuint m_FBO3 = 0;
+	GLuint m_FBOTexture0 = 0;
+	GLuint m_FBOTexture1 = 0;
+	GLuint m_FBOTexture2 = 0;
+	GLuint m_FBOTexture3 = 0;
 
 	//Matrices
 	glm::mat4 m_ViewMat4;
@@ -244,6 +262,7 @@ private:
 	GLuint m_Flag_Camera = 0;
 	GLuint m_Heightmap = 0;
 	GLuint m_NormalVector = 0;
+	GLuint m_FrameBuffer = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
@@ -265,5 +284,9 @@ private:
 	GLuint m_TextureSnow = 0;
 	GLuint m_TextureGrass = 0;
 	
+	// FrameBuffer
+	GLuint m_FrameTextureID;
+	GLuint m_DepthRenderBuffer;
+
 };
 
