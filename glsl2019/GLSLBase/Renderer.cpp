@@ -51,7 +51,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_Heightmap = CompileShaders("./Shaders/0603Heightmap.vs", "./Shaders/0603Heightmap.fs");
 	m_NormalVector = CompileShaders("./Shaders/0605NormalVector.vs", "./Shaders/0605NormalVector.fs");
 	m_FrameBuffer = CompileShaders("./Shaders/0610FrameBuffer.vs", "./Shaders/0610FrameBuffer.fs");
-
+	m_Bloom = CompileShaders("./Shaders/0612Bloom.vs", "./Shaders/0612Bloom.fs");
+	
 	//Load Textures
 	m_TextureFence = CreatePngTexture("./Textures/Fence.png");
 	m_TextureSky = CreatePngTexture("./Textures/Sky.png");
@@ -73,6 +74,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_FBO2 = CreateFBO(512, 512, &m_FBOTexture2);
 	m_FBO3 = CreateFBO(512, 512, &m_FBOTexture3);
 
+	//Create Bloom
+	m_FBO_Bloom = CreateFBO(512, 512, &m_FBOBloomTexture);
 }
 
 void Renderer::CreateVertexBufferObjects(){
@@ -158,7 +161,10 @@ void Renderer::CreateVertexBufferObjects(){
 	//GenQuadsVBO_NormalVector(&m_VBO_NormalVector, &m_Count_NormalVector);
 
 	//DrawFrameBuffer () ; init
-	GenQuadsVBO_FrameBuffer();
+	//GenQuadsVBO_FrameBuffer();
+
+	//DrawBloom () ; init
+	GenQuadsVBO_Bloom();
 }
 
 void Renderer::GenQuadsVBO_Rect() {
@@ -2716,7 +2722,47 @@ void Renderer::GenQuadsVBO_FrameBuffer() {
 	
 	//DrawSpriteAnimation () ; init
 	GenQuadsVBO_SpriteAnimation(&m_VBO_SpriteAnimation, &m_Count_SpriteAnimation);
-	
+}
+
+void Renderer::GenQuadsVBO_Bloom() {
+
+	float size = 1.f;
+	float rect[]
+		=
+	{
+		-size, -size, 0.f, 0.5f, 0.f, 0.f,//x, y, z, value, u, v
+		-size, size, 0.f, 0.5f, 0.f, 1.f,
+		size, size, 0.f, 0.5f, 1.f, 1.f, //Triangle1
+		-size, -size, 0.f, 0.5f, 0.f, 0.f,
+		size, size, 0.f, 0.5f, 1.f, 1.f,
+		size, -size, 0.f, 0.5f, 1.f, 0.f //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBO_Bloom);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Bloom);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	size = 0.5f;
+	float texRect[]
+		=
+	{
+		-size, -size, 0.f, 0.f, 0.f, //x, y, z, u, v
+		-size, size, 0.f, 0.f, 1.f,
+		size, size, 0.f, 1.f, 1.f, //Triangle1
+		-size, -size, 0.f, 0.f, 0.f,
+		size, size, 0.f, 1.f, 1.f,
+		size, -size, 0.f, 1.f, 0.f //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBO_Buffer_Bloom);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_Bloom);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texRect), texRect, GL_STATIC_DRAW);
+
+	//DrawHeightmap () ; init
+	GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
+
+	//DrawGravity(); init
+	GenQuadsVBO_Gra(50, &m_VBOGravity, &m_VBOGravity_VertexCount);
 }
 
 void Renderer::InitOrthoMatrices() {
@@ -4077,72 +4123,6 @@ void Renderer::DrawNormalVector() {
 	}
 }
 
-void Renderer::DrawFrameBuffer() {
-
-	//glm::vec3 camerapos = glm::vec3(0.f, -0.7f, 0.5f);
-	//glm::vec3 cameralook = glm::vec3(0.f, 0.f, 0.f);
-	//glm::vec3 cameraup = glm::vec3(0.f, 0.f, 1.f);
-
-	//InitPerspectMatrices(camerapos, cameralook, cameraup);
-
-	//GLuint Shader = m_FrameBuffer;
-
-	//glUseProgram(Shader);
-
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);
-
-	//float campos[] = { camerapos.x,camerapos.y,camerapos.z };
-
-	//int uniformCameraPosID = glGetUniformLocation(Shader, "u_CameraPos");
-	//glUniform3fv(uniformCameraPosID, 1, campos);
-
-	//int uniformTime = glGetUniformLocation(Shader, "uTime");
-	//glUniform1f(uniformTime, gTimeStamp);
-
-	//gTimeStamp += 0.0005f;
-
-
-	////Texture Setting
-	//GLuint uSnow = glGetUniformLocation(Shader, "u_TextureSnow");
-	//glUniform1i(uSnow, 0);
-
-	//GLuint uGrass = glGetUniformLocation(Shader, "u_TextureSGrass");
-	//glUniform1i(uGrass, 1);
-
-	//GLuint uHeight = glGetUniformLocation(Shader, "u_TextureHeight");
-	//glUniform1i(uHeight, 2);
-
-
-	////gltexture0번에
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, m_TextureSnow);
-
-	////gltexture0번에
-	//glActiveTexture(GL_TEXTURE1);
-	//glBindTexture(GL_TEXTURE_2D, m_TextureGrass);
-
-	//glActiveTexture(GL_TEXTURE2);
-	//glBindTexture(GL_TEXTURE_2D, m_TextureHeightmap);
-
-	//
-
-	//GLuint projView = glGetUniformLocation(Shader, "u_ProjView");
-	//glUniformMatrix4fv(projView, 1, GL_FALSE, &m_ViewProjMat4[0][0]);
-
-	//glEnableVertexAttribArray(0);
-
-	//{
-	//	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_FrameBuffer);
-
-	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-
-	//	glDrawArrays(GL_TRIANGLES, 0, m_Count_FrameBuffer);
-
-	//	glDisableVertexAttribArray(0);
-	//}
-}
-
 GLuint Renderer::CreateFBO(int sx, int sy, GLuint* tex) {
 
 	// render target
@@ -4151,12 +4131,12 @@ GLuint Renderer::CreateFBO(int sx, int sy, GLuint* tex) {
 	glBindTexture(GL_TEXTURE_2D, tempTex);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, sx, sy, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, sx, sy, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	*tex = tempTex;
 
 	// Gen Depth Buffer
@@ -4254,6 +4234,65 @@ void Renderer::DrawTextureRect(GLuint tex, float x, float y, float sx, float sy)
 	glEnableVertexAttribArray(aTex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_TextRect);
+
+	glVertexAttribPointer(aPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(aPos);
+	glDisableVertexAttribArray(aTex);
+}
+
+void Renderer::DrawRenderBloomFBO() {
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_Bloom);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(1.f);
+	glViewport(0, 0, m_WindowSizeX, m_WindowSizeY);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawHeightmap();
+	DrawGravity();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glViewport(0, 0, m_WindowSizeX, m_WindowSizeY);
+
+	DrawBloomTextureRect(m_FBOBloomTexture, 0.f, 0.f, 2.f, 2.f);
+}
+
+void Renderer::DrawBloomTextureRect(GLuint tex, float x, float y, float sx, float sy) {
+
+	GLuint shader = m_Bloom;
+
+	glUseProgram(shader);
+
+	GLuint uTime = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uTime, p_time);
+	p_time += 0.01;
+	GLuint uTexture = glGetUniformLocation(shader, "u_Texture");
+	glUniform1i(uTexture, 0);
+	GLuint uPos = glGetUniformLocation(shader, "u_Pos");
+	GLuint uSize = glGetUniformLocation(shader, "u_Size");
+	glUniform2f(uPos, x, y);
+	glUniform2f(uSize, sx, sy);
+
+	GLuint uBlursizeID = glGetUniformLocation(shader, "u_Blursize");
+	glUniform1f(uBlursizeID, 30.f);
+	GLuint uTexelsizeID = glGetUniformLocation(shader, "u_Texelsize");
+	glUniform2f(uTexelsizeID, 1.0f / 1024.0f, 1.0f / 1024.0f);
+
+	//BindNumberTextures();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	GLuint aPos = glGetAttribLocation(shader, "a_Position");
+	GLuint aTex = glGetAttribLocation(shader, "a_Tex");
+
+	glEnableVertexAttribArray(aPos);
+	glEnableVertexAttribArray(aTex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO_Buffer_Bloom);
 
 	glVertexAttribPointer(aPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));

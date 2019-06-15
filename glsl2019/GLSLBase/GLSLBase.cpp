@@ -8,9 +8,6 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY.
 */
 
-#define WINDOWSIZEx 1024
-#define WINDOWSIZEy 1024
-
 #include "stdafx.h"
 #include <iostream>
 #include "Dependencies\glew.h"
@@ -20,8 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer *g_Renderer = NULL;
 
-int g_WindowSizeX = 1024;
-int g_WindowSizeY = 1024;
+int g_WindowSizeX = 512;
+int g_WindowSizeY = 512;
 
 void RenderScene(void)
 {
@@ -61,7 +58,8 @@ void RenderScene(void)
 	//g_Renderer->DrawFlag_Camera();
 	//g_Renderer->DrawHeightmap();
 	//g_Renderer->DrawNormalVector();
-	g_Renderer->DrawRenderFBO();
+	//g_Renderer->DrawRenderFBO();
+	g_Renderer->DrawRenderBloomFBO();
 
 	glutSwapBuffers();
 }

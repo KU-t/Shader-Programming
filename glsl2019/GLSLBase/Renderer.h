@@ -48,8 +48,8 @@ public:
 	void DrawFlag_Camera();
 	void DrawHeightmap();
 	void DrawNormalVector();
-	void DrawFrameBuffer();
 	void DrawRenderFBO();
+	void DrawRenderBloomFBO();
 
 	void InitOrthoMatrices();
 	void InitOrthoMatrices(float, float, float, float, float, float, float, float, float);
@@ -92,9 +92,11 @@ private:
 	void GenQuadsVBO_Heightmap(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_NormalVector(GLuint * ID, GLuint * vCount);
 	void GenQuadsVBO_FrameBuffer();
+	void GenQuadsVBO_Bloom();
 	
 	GLuint Renderer::CreateFBO(int sx, int sy, GLuint* tex);
 	void DrawTextureRect(GLuint tex, float x, float y, float sx, float sy);
+	void DrawBloomTextureRect(GLuint tex, float x, float y, float sx, float sy);
 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
 
@@ -215,6 +217,10 @@ private:
 	GLuint m_VBO_Buffer_Rect = 0;
 	GLuint m_VBO_Buffer_TextRect = 0;
 
+	//DrawBloom
+	GLuint m_VBO_Bloom = 0;
+	GLuint m_VBO_Buffer_Bloom = 0;
+
 	//	FrameBufferObj
 	GLuint m_FBO0 = 0;
 	GLuint m_FBO1 = 0;
@@ -224,6 +230,9 @@ private:
 	GLuint m_FBOTexture1 = 0;
 	GLuint m_FBOTexture2 = 0;
 	GLuint m_FBOTexture3 = 0;
+
+	GLuint m_FBO_Bloom = 0;
+	GLuint m_FBOBloomTexture = 0;
 
 	//Matrices
 	glm::mat4 m_ViewMat4;
@@ -263,6 +272,7 @@ private:
 	GLuint m_Heightmap = 0;
 	GLuint m_NormalVector = 0;
 	GLuint m_FrameBuffer = 0;
+	GLuint m_Bloom = 0;
 
 	//Textures
 	GLuint gTextureID = 0;
