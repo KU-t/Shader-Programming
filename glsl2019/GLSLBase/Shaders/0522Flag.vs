@@ -30,10 +30,10 @@ void main()
 	float sinvalueY = 0.2 * sin(valueY);
 	
 	// scale
-	newPos.y = newPos.y * ((1.0 - additionalValueX) * 0.5 + 0.5);
+	//newPos.y = newPos.y * ((1.0 - additionalValueX) * 0.5 + 0.5 );
 
 	// ±×¸®±â ÁÂÇ¥
-	newPos.x = newPos.x - sinvalueX * additionalValueX;
+	//newPos.x = newPos.x - sinvalueX * additionalValueX;
 	newPos.y = newPos.y + sinvalueY * additionalValueX;
 
 	v_color = sinvalueY + 0.5;

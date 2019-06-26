@@ -80,88 +80,88 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 void Renderer::CreateVertexBufferObjects(){
 	//DrawRect() init
-	//GenQuadsVBO_Rect();
+	GenQuadsVBO_Rect();
 
 	//DrawTri() init
-	//GenQuadsVBO_Tri();
+	GenQuadsVBO_Tri();
 
 	//DrawRandRect() init
-	//GenQuadsVBO_Rand(1000);
+	GenQuadsVBO_Rand(1000);
 
 	//DrawGridMesh() init
-	//GenQuadsVBO_GridMesh();
+	GenQuadsVBO_GridMesh();
 
 	//DrawSimpleVel() init
-	//GenQuadsVBO_Vel(1000);
+	GenQuadsVBO_Vel(1000);
 
 	//DrawGravity(); init
-	//GenQuadsVBO_Gra(1000, &m_VBOGravity, &m_VBOGravity_VertexCount);
+	GenQuadsVBO_Gra(10000, &m_VBOGravity, &m_VBOGravity_VertexCount);
 
 	//DrawSinGraph(); init
-	//GenQuadsVBO_Sin(1000, false, &m_VBO_SinGraph, &m_Count_SinGraph);
+	GenQuadsVBO_Sin(1000, false, &m_VBO_SinGraph, &m_Count_SinGraph);
 
 	//DrawDirectionSin(); init
-	//GenQuadsVBO_DirectionSin(100000, false, &m_VBO_DirectionSinGraph, &m_Count_DirectionSinGraph);
+	GenQuadsVBO_DirectionSin(100000, false, &m_VBO_DirectionSinGraph, &m_Count_DirectionSinGraph);
 
 	//DrawDirectionSin(); init
-	//GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
+	GenQuadsVBO_FragmentBase(100000, false, &m_VBO_FragmentBase, &m_Count_FragmentBase);
 
 	//DrawInterpolation(); init
-	//GenQuadsVBO_InterpolationBase(&m_VBO_InterpolationBase, &m_Count_InterpolationBase);
+	GenQuadsVBO_InterpolationBase(&m_VBO_InterpolationBase, &m_Count_InterpolationBase);
 
 	//DrawRadar(); init
-	//GenQuadsVBO_Radar(&m_VBO_Radar, &m_Count_Radar);
+	GenQuadsVBO_Radar(&m_VBO_Radar, &m_Count_Radar);
 
 	//DrawTextureMapping(); init
-	//GenQuadsVBO_TextureMapping(&m_VBO_TextureMapping, &m_Count_TextureMapping);
+	GenQuadsVBO_TextureMapping(&m_VBO_TextureMapping, &m_Count_TextureMapping);
 
 	//DrawTextureSampling(); init
-	//GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
+	GenQuadsVBO_TextureMaking(&m_VBO_TextureMaking, &m_Count_TextureMaking);
 
 	//DrawDrawTextureTransUV(); init
-	//GenQuadsVBO_TextureTransUV(&m_VBO_TextureTransUV, &m_Count_TextureTransUV);
+	GenQuadsVBO_TextureTransUV(&m_VBO_TextureTransUV, &m_Count_TextureTransUV);
 
 	//DrawTextures(); init
-	//GenQuadsVBO_Textures(&m_VBO_Textures, &m_Count_Textures);
+	GenQuadsVBO_Textures(&m_VBO_Textures, &m_Count_Textures);
 
 	//PracticeTextures(); init
-	//GenQuadsVBO_PracticeTextures(&m_VBO_PracticeTextures, &m_Count_PracticeTextures);
+	GenQuadsVBO_PracticeTextures(&m_VBO_PracticeTextures, &m_Count_PracticeTextures);
 
 	//DrawTexturesAnimation(); init
-	//GenQuadsVBO_TexturesAnimation(&m_VBO_TexturesAnimation, &m_Count_TexturesAnimation);
+	GenQuadsVBO_TexturesAnimation(&m_VBO_TexturesAnimation, &m_Count_TexturesAnimation);
 
 	//DrawNumber() || DrawNumbers(); init
-	//GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
+	GenQuadsVBO_TexturesRect(&m_VBO_TexturesRect, &m_Count_TexturesRect);
 
 	//PracticeAnimation(); init
-	//GenQuadsVBO_PracticeAnimation(&m_VBO_PracticeAnimation, &m_Count_PracticeAnimation);
+	GenQuadsVBO_PracticeAnimation(&m_VBO_PracticeAnimation, &m_Count_PracticeAnimation);
 
 	//DrawSpriteAnimation () ; init
-	//GenQuadsVBO_SpriteAnimation(&m_VBO_SpriteAnimation, &m_Count_SpriteAnimation);
+	GenQuadsVBO_SpriteAnimation(&m_VBO_SpriteAnimation, &m_Count_SpriteAnimation);
 
 	//DrawVSSandbox () ; init
-	//GenQuadsVBO_VSSandbox(&m_VBO_VSSandbox, &m_Count_VSSandbox);
+	GenQuadsVBO_VSSandbox(&m_VBO_VSSandbox, &m_Count_VSSandbox);
 
 	//DrawFlag () ; init
-	//GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
+	GenQuadsVBO_Flag(&m_VBO_Flag, &m_Count_Flag);
 
 	//DrawSphereMapping () ; init
-	//GenQuadsVBO_SphereMapping(&m_VBO_SphereMapping, &m_Count_SphereMapping);
+	GenQuadsVBO_SphereMapping(&m_VBO_SphereMapping, &m_Count_SphereMapping);
 	
 	//DrawSimpleCube () ; init
-	//GenQuadsVBO_SimpleCube(&m_VBO_SimpleCube, &m_Count_SimpleCube);
+	GenQuadsVBO_SimpleCube(&m_VBO_SimpleCube, &m_Count_SimpleCube);
 
 	//DrawFlag_Camera () ; init
-	//GenQuadsVBO_Flag_Camera(&m_VBO_Flag_Camera, &m_Count_Flag_Camera);
+	GenQuadsVBO_Flag_Camera(&m_VBO_Flag_Camera, &m_Count_Flag_Camera);
 
 	//DrawHeightmap () ; init
-	//GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
+	GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
 	
 	//DrawNormalVector () ; init
-	//GenQuadsVBO_NormalVector(&m_VBO_NormalVector, &m_Count_NormalVector);
+	GenQuadsVBO_NormalVector(&m_VBO_NormalVector, &m_Count_NormalVector);
 
 	//DrawFrameBuffer () ; init
-	//GenQuadsVBO_FrameBuffer();
+	GenQuadsVBO_FrameBuffer();
 
 	//DrawBloom () ; init
 	GenQuadsVBO_Bloom();
@@ -275,7 +275,7 @@ void Renderer::GenQuadsVBO_GridMesh()
 {
 	float StartPointX = -0.5f;
 	float StartPointY = -0.5f;
-	float	EndPointX = 0.5f;
+	float EndPointX = 0.5f;
 	float EndPointY = 0.5f;
 
 	int PointCountX = 32;
@@ -2759,7 +2759,7 @@ void Renderer::GenQuadsVBO_Bloom() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texRect), texRect, GL_STATIC_DRAW);
 
 	//DrawHeightmap () ; init
-	GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
+	//GenQuadsVBO_Heightmap(&m_VBO_Heightmap, &m_Count_Heightmap);
 
 	//DrawGravity(); init
 	GenQuadsVBO_Gra(50, &m_VBOGravity, &m_VBOGravity_VertexCount);
@@ -3354,7 +3354,7 @@ void Renderer::DrawInterpolationBase() {
 	GLuint aPosID = glGetAttribLocation(Shader, "a_Position");
 	GLuint aUVID = glGetAttribLocation(Shader, "a_UV");
 
-	float v[] = {0,0,0,0.2,0.2,0.2,0.2,0,0.1,0.1};
+	float v[] = {0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0, 0.1 ,0.1};
 	GLuint uV = glGetUniformLocation(Shader, "u_Points");
 	glUniform2fv(uV, 5, v);
 
@@ -4251,7 +4251,7 @@ void Renderer::DrawRenderBloomFBO() {
 	glClearDepth(1.f);
 	glViewport(0, 0, m_WindowSizeX, m_WindowSizeY);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawHeightmap();
+	//DrawHeightmap();
 	DrawGravity();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -4278,7 +4278,7 @@ void Renderer::DrawBloomTextureRect(GLuint tex, float x, float y, float sx, floa
 	glUniform2f(uSize, sx, sy);
 
 	GLuint uBlursizeID = glGetUniformLocation(shader, "u_Blursize");
-	glUniform1f(uBlursizeID, 30.f);
+	glUniform1f(uBlursizeID, 15.f);
 	GLuint uTexelsizeID = glGetUniformLocation(shader, "u_Texelsize");
 	glUniform2f(uTexelsizeID, 1.0f / 1024.0f, 1.0f / 1024.0f);
 

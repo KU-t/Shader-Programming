@@ -12,7 +12,7 @@ void main(){
 
 	float dis = sqrt((v_Orixy.x * v_Orixy.x) + (v_Orixy.y * v_Orixy.y));
 	if(dis < v_Radius)	{
-		newColor.a = pow(1 - dis / v_Radius, 2);
+		newColor.a = pow(1 - dis / v_Radius, 5);
 	}
 	else
 		newColor.a = 0.f;

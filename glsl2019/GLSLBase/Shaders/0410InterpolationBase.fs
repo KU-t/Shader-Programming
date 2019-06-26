@@ -8,7 +8,6 @@ in vec2 v_Position;
 in vec2 v_UV;
 
 uniform vec2 u_Points[5];
-const vec2 c_Points[5] = {vec2(0.0, 0.0), vec2(0.0, 0.2), vec2(0.2, 0.2), vec2(0.2, 0.0), vec2(0.1, 0.1) };
 
 void main(){
 	vec2 newUV = v_UV - vec2(0.5, 0.5);	// -0.5 ~ 0.5, x, y

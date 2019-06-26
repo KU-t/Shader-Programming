@@ -61,7 +61,7 @@ void SphereMapping(){
 }
 
 void main(){
-	Wave();
-	//SphereMapping();
+	//Wave();
+	SphereMapping();
 }
 

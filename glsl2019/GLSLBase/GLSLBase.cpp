@@ -17,8 +17,8 @@ but WITHOUT ANY WARRANTY.
 
 Renderer *g_Renderer = NULL;
 
-int g_WindowSizeX = 512;
-int g_WindowSizeY = 512;
+int g_WindowSizeX = 1024;
+int g_WindowSizeY = 1024;
 
 void RenderScene(void)
 {
@@ -27,7 +27,7 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// 2. 화면을 그린다.
-	//g_Renderer->DrawRect();
+	g_Renderer->DrawRect();
 	//g_Renderer->DrawTriangle();
 	//g_Renderer->DrawRandRect();
 	//g_Renderer->DrawGridMesh();
@@ -59,7 +59,7 @@ void RenderScene(void)
 	//g_Renderer->DrawHeightmap();
 	//g_Renderer->DrawNormalVector();
 	//g_Renderer->DrawRenderFBO();
-	g_Renderer->DrawRenderBloomFBO();
+	//g_Renderer->DrawRenderBloomFBO();
 
 	glutSwapBuffers();
 }

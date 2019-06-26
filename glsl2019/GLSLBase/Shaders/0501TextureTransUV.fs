@@ -6,12 +6,14 @@ uniform float u_Time;
 out vec4 FragColor;
 
 void main(){
-	
-	/*vec2 newUV = v_UV;
+	/*
+	vec2 newUV = v_UV;
 	vec4 newColor = texture(u_Texture, newUV);
-	FragColor = newColor;*/
+	FragColor = newColor;
+	*/
 
-	/*float s = 4;
+	/*
+	float s = 4;
 	vec2 newUV[5];
 	vec4 newColor[5];
 
@@ -29,19 +31,23 @@ void main(){
 	
 	vec4 finalColor = newColor[0] + newColor[1] + newColor[2] + newColor[3] + newColor[4];
 	finalColor /= 5;
-	FragColor = finalColor;*/
+	FragColor = finalColor;
+	*/
 
 	//1
 	//vec2 newUV = vec2(v_UV.x, 2 * abs(v_UV.y - 0.5));
 
+	/*
 	//2
-	/*vec2 newUV;
+	vec2 newUV;
 	newUV.x = fract(v_UV.x * 3.0);
 	newUV.y = v_UV.y / 3.0;	// 0 ~ 1/3
-	newUV.y += floor(v_UV.x * 3.0) / 3.0;*/
+	newUV.y += floor(v_UV.x * 3.0) / 3.0;
+	*/
 
+	/*
 	//3
-	/*vec2 newUV;
+	vec2 newUV;
 	newUV.x = fract(v_UV.x * 3.0);
 	newUV.y = v_UV.y / 3.0;	// 0 ~ 1/3
 	newUV.y += floor((1 - v_UV.x) * 3.0) / 3.0;
@@ -49,10 +55,12 @@ void main(){
 	*/
 
 	//4
+	
 	vec2 newUV;
 	newUV.x = v_UV.x;
 	newUV.y = (2 - floor( v_UV.y * 3.0)) / 3;	// 2/3, 1/3, 0/3
 	newUV.y += fract( v_UV.y * 3.0) / 3.0;
+	
 	
 	//5
 

@@ -18,9 +18,10 @@ void main()
 	v_Color = a_Color;
 
 	temp = a_Position.xyz;
-	
-	temp.x += 0.5 * cos(rad(Time));
-	temp.y += 0.5 * sin(rad(Time));
+	temp.x -= 0.5;
+
+	//temp.x += 0.5 * cos(rad(Time));
+	//temp.y += 0.5 * sin(rad(Time));
 
 	gl_Position = vec4(temp, 1); // a_Position이면 통채로 넘어감
 }

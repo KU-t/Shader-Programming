@@ -10,7 +10,7 @@ void main(){
 	//vec2 newUV = fract(2 * v_UV);
 	//vec2 newUV = fract(2 * v_UV + vec2(u_Time, sin(u_Time) ) );
 
-	vec2 newUV = abs(v_UV - vec2(0, 0.5)) + vec2(0, 0.5) + vec2(0, 0.5);
+	vec2 newUV = abs(v_UV - vec2(0, 0.5));
 
 	//vec2 newUV = v_UV;
 	//if(newUV.x > 0.5) 	newUV.x = 1.0 - newUV.x;
